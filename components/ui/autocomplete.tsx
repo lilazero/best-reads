@@ -1,3 +1,4 @@
+"use client";
 import { XIcon } from "lucide-react";
 import { Autocomplete as AutocompletePrimitive } from "@base-ui-components/react/autocomplete";
 
