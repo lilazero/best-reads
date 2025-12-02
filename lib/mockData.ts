@@ -1,4 +1,5 @@
 import { Tag } from "./types";
+import { Book } from "./types";
 
 export const tags: Tag[] = [
   { id: "t1", value: "feature" },
@@ -42,4 +43,19 @@ export const tags: Tag[] = [
   { id: "c-toggle-group", value: "component: toggle group" },
   { id: "c-toolbar", value: "component: toolbar" },
   { id: "c-tooltip", value: "component: tooltip" },
+];
+
+export const RecommendedBooks: Book[] = [
+  {
+    id: "b1",
+    title: "The Great Gatsby",
+  },
+  {
+    id: "b2",
+    title: "To Kill a Mockingbird",
+  },
+  {
+    id: "b3",
+    title: "1984",
+  },
 ];
