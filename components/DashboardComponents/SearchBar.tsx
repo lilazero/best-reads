@@ -7,7 +7,7 @@ import {
   AutocompletePopup,
   AutocompletePositioner,
 } from "@/components/ui/autocomplete";
-import { tags } from "../lib/mockData";
+import { tags } from "../../lib/mockData";
 export default function SearchBar() {
   return (
     <>
