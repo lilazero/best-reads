@@ -1,0 +1,12 @@
+[
+  {
+    "_id": { "$oid": "675d1f18e9c0c1b4b1a2a471" },
+    "bookId": { "$oid": "675d1f18e9c0c1b4b1a2a411" },
+    "fullText": "Chapter 1: The Silent Echo\n\nThe fog rolled in from the sea, thick and gray, wrapping the coastal town in a blanket of mystery. Detective Sarah Martinez stood at the edge of the cliff, looking down at the churning waters below. This was where it had all started - the disappearances, the strange occurrences, and now, the silence that echoed louder than any scream.\n\nShe had been called to this small town two weeks ago, after the third person vanished without a trace. At first, the local police thought it was just tourists getting lost on the hiking trails. But Sarah knew better. There was a pattern here, something darker lurking beneath the surface.\n\nAs she turned back toward the town, her phone buzzed. Another person had gone missing."
+  },
+  {
+    "_id": { "$oid": "675d1f18e9c0c1b4b1a2a472" },
+    "bookId": { "$oid": "675d1f18e9c0c1b4b1a2a413" },
+    "fullText": "Chapter 1: Beyond the Stars\n\nThe starship Odyssey had been traveling for three years when they detected the signal. Captain James Chen stood on the bridge, staring at the readout on the main screen. The pattern was unmistakable - this was not a natural phenomenon. Someone, or something, was trying to communicate.\n\n'Analysis, Lieutenant,' he ordered, his voice steady despite the racing of his heart.\n\n'The signal is coming from the fourth planet in this system, Captain. It's repeating every 47 seconds. The mathematical precision suggests intelligence.'\n\nThis was it. This was what they had come all this way to find - proof that humanity was not alone in the universe. Chen took a deep breath and gave the order that would change everything: 'Set course for the fourth planet. And send a response signal.'"
+  }
+]
