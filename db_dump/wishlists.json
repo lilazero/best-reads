@@ -1,0 +1,10 @@
+[
+  {
+    "_id": { "$oid": "662f3f18e9c0c1b4b1a2a441" },
+    "userId": { "$oid": "662f3f18e9c0c1b4b1a2a421" },
+    "bookIds": [
+      { "$oid": "662f3f18e9c0c1b4b1a2a412" }
+    ],
+    "createdAt": "2024-02-14T00:00:00.000Z"
+  }
+]
