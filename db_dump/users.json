@@ -1,32 +1,52 @@
 [
   {
-    "_id": { "$oid": "662f3f18e9c0c1b4b1a2a421" },
-    "username": "DreamReader",
-    "email": "reader@example.com",
-    "passwordHash": "$2b$10$hashedstring123",
-    "createdAt": "2024-01-10T11:00:00.000Z",
+    "_id": { "$oid": "675d1f18e9c0c1b4b1a2a421" },
+    "username": "BookLover123",
+    "email": "booklover@example.com",
+    "passwordHash": "$2b$10$hashedpassword123",
+    "createdAt": "2024-01-15T10:00:00.000Z",
     "isAdmin": false,
     "preferences": {
-      "theme": "dark",
-      "language": "ua"
+      "theme": "light",
+      "language": "en"
     },
     "readingHistory": [
-      { "$oid": "662f3f18e9c0c1b4b1a2a411" }
+      { "$oid": "675d1f18e9c0c1b4b1a2a411" },
+      { "$oid": "675d1f18e9c0c1b4b1a2a413" }
     ],
     "followedAuthors": [
-      { "$oid": "662f3f18e9c0c1b4b1a2a402" }
+      { "$oid": "675d1f18e9c0c1b4b1a2a401" },
+      { "$oid": "675d1f18e9c0c1b4b1a2a402" }
     ]
   },
   {
-    "_id": { "$oid": "662f3f18e9c0c1b4b1a2a422" },
-    "username": "Moderator_UA",
-    "email": "mod@example.com",
-    "passwordHash": "$2b$10$hashedstring456",
-    "createdAt": "2023-10-01T09:00:00.000Z",
+    "_id": { "$oid": "675d1f18e9c0c1b4b1a2a422" },
+    "username": "ReadingFanatic",
+    "email": "reader@example.com",
+    "passwordHash": "$2b$10$hashedpassword456",
+    "createdAt": "2024-02-20T14:30:00.000Z",
+    "isAdmin": false,
+    "preferences": {
+      "theme": "dark",
+      "language": "en"
+    },
+    "readingHistory": [
+      { "$oid": "675d1f18e9c0c1b4b1a2a414" }
+    ],
+    "followedAuthors": [
+      { "$oid": "675d1f18e9c0c1b4b1a2a403" }
+    ]
+  },
+  {
+    "_id": { "$oid": "675d1f18e9c0c1b4b1a2a423" },
+    "username": "AdminUser",
+    "email": "admin@example.com",
+    "passwordHash": "$2b$10$hashedpassword789",
+    "createdAt": "2023-12-01T08:00:00.000Z",
     "isAdmin": true,
     "preferences": {
       "theme": "light",
-      "language": "ua"
+      "language": "en"
     },
     "readingHistory": [],
     "followedAuthors": []
