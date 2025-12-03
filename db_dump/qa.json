@@ -1,0 +1,34 @@
+[
+  {
+    "_id": { "$oid": "675d1f18e9c0c1b4b1a2a451" },
+    "bookId": { "$oid": "675d1f18e9c0c1b4b1a2a411" },
+    "userId": { "$oid": "675d1f18e9c0c1b4b1a2a421" },
+    "title": "Question about the ending",
+    "body": "Can someone explain what happened to the detective in the final chapter? I'm confused about his decision.",
+    "createdAt": "2024-03-20T16:00:00.000Z",
+    "answers": [
+      {
+        "_id": { "$oid": "675d1f18e9c0c1b4b1a2a452" },
+        "userId": { "$oid": "675d1f18e9c0c1b4b1a2a422" },
+        "body": "The detective chose to keep the secret to protect the town's reputation. It's a moral dilemma theme.",
+        "createdAt": "2024-03-20T17:30:00.000Z"
+      }
+    ]
+  },
+  {
+    "_id": { "$oid": "675d1f18e9c0c1b4b1a2a453" },
+    "bookId": { "$oid": "675d1f18e9c0c1b4b1a2a413" },
+    "userId": { "$oid": "675d1f18e9c0c1b4b1a2a422" },
+    "title": "What does the alien language mean?",
+    "body": "Does anyone know if the alien symbols in chapter 7 have actual meanings or are they just decorative?",
+    "createdAt": "2024-04-10T13:15:00.000Z",
+    "answers": [
+      {
+        "_id": { "$oid": "675d1f18e9c0c1b4b1a2a454" },
+        "userId": { "$oid": "675d1f18e9c0c1b4b1a2a421" },
+        "body": "The author mentioned in an interview that they're based on mathematical concepts. Each symbol represents a prime number.",
+        "createdAt": "2024-04-10T14:00:00.000Z"
+      }
+    ]
+  }
+]
