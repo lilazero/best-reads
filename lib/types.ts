@@ -8,6 +8,7 @@ export type Book = {
   title: string;
   src?: string;
   price?: string;
+  rating?: number;
   description?: string;
   longDescription?: string;
   tags?: Tag[];
