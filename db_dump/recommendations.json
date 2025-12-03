@@ -1,0 +1,23 @@
+[
+  {
+    "_id": { "$oid": "675d1f18e9c0c1b4b1a2a461" },
+    "userId": { "$oid": "675d1f18e9c0c1b4b1a2a421" },
+    "bookId": { "$oid": "675d1f18e9c0c1b4b1a2a412" },
+    "recommendedBooks": [
+      { "$oid": "675d1f18e9c0c1b4b1a2a411" },
+      { "$oid": "675d1f18e9c0c1b4b1a2a414" }
+    ],
+    "reason": "Based on your reading history and preferences for mystery and drama",
+    "createdAt": "2024-04-01T10:00:00.000Z"
+  },
+  {
+    "_id": { "$oid": "675d1f18e9c0c1b4b1a2a462" },
+    "userId": { "$oid": "675d1f18e9c0c1b4b1a2a422" },
+    "bookId": { "$oid": "675d1f18e9c0c1b4b1a2a413" },
+    "recommendedBooks": [
+      { "$oid": "675d1f18e9c0c1b4b1a2a411" }
+    ],
+    "reason": "Readers who enjoyed Beyond the Stars also liked The Silent Echo",
+    "createdAt": "2024-04-15T12:30:00.000Z"
+  }
+]

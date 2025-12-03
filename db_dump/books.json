@@ -1,0 +1,42 @@
+[
+  {
+    "_id": { "$oid": "675d1f18e9c0c1b4b1a2a411" },
+    "title": "The Silent Echo",
+    "authorId": { "$oid": "675d1f18e9c0c1b4b1a2a401" },
+    "description": "A gripping mystery about a detective investigating strange disappearances in a small coastal town.",
+    "genre": ["Mystery", "Thriller"],
+    "publicationYear": 2022,
+    "averageRating": 4.5,
+    "coverImageUrl": "detective1.png"
+  },
+  {
+    "_id": { "$oid": "675d1f18e9c0c1b4b1a2a412" },
+    "title": "Midnight at the Gallery",
+    "authorId": { "$oid": "675d1f18e9c0c1b4b1a2a401" },
+    "description": "An art curator discovers a hidden secret behind a famous painting.",
+    "genre": ["Mystery", "Drama"],
+    "publicationYear": 2023,
+    "averageRating": 4.2,
+    "coverImageUrl": "detective1.png"
+  },
+  {
+    "_id": { "$oid": "675d1f18e9c0c1b4b1a2a413" },
+    "title": "Beyond the Stars",
+    "authorId": { "$oid": "675d1f18e9c0c1b4b1a2a402" },
+    "description": "A space exploration team encounters an ancient alien civilization.",
+    "genre": ["Science Fiction", "Adventure"],
+    "publicationYear": 2021,
+    "averageRating": 4.8,
+    "coverImageUrl": "detective1.png"
+  },
+  {
+    "_id": { "$oid": "675d1f18e9c0c1b4b1a2a414" },
+    "title": "Summer in Paris",
+    "authorId": { "$oid": "675d1f18e9c0c1b4b1a2a403" },
+    "description": "A heartwarming romance about two strangers who meet during a summer vacation.",
+    "genre": ["Romance", "Contemporary"],
+    "publicationYear": 2023,
+    "averageRating": 4.3,
+    "coverImageUrl": "detective1.png"
+  }
+]
