@@ -1,13 +1,14 @@
 "use client";
 
-import RecommendedBooks from "@/components/DashboardComponents/RecommendedBooks";
+import RecommendedBookList from "@/components/DashboardComponents/RecommendedBookList";
 import SearchBar from "@/components/DashboardComponents/SearchBar";
+import { RecommendedBooks } from "@/lib/mockData";
 
 export default function Home() {
   return (
-    <div className="flex min-h-vh mt-10 justify-center font-sans dark:bg-black">
+    <div className="flex items-center flex-col min-h-vh mt-10 justify-center font-sans dark:bg-black">
       <SearchBar />
-      <RecommendedBooks />
+      <RecommendedBookList books={RecommendedBooks} />
     </div>
   );
 }
