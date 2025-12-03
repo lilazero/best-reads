@@ -39,6 +39,7 @@ export const RecommendedBooks: Book[] = [
     title: "The Great Gatsby",
     src: "https://m.media-amazon.com/images/I/81TLiZrasVL.jpg",
     price: "$12.99",
+    rating: 4.5,
     description:
       "A classic American novel about wealth and love in the Jazz Age.",
     longDescription:
@@ -54,6 +55,7 @@ export const RecommendedBooks: Book[] = [
     title: "To Kill a Mockingbird",
     src: "https://m.media-amazon.com/images/I/91REf0GGuiL._UF1000,1000_QL80_.jpg",
     price: "$10.99",
+    rating: 4.8,
     description: "A gripping tale of racial injustice and childhood innocence.",
     longDescription:
       "Harper Lee's powerful narrative set in the Depression-era South follows young Scout Finch as her father defends a Black man falsely accused of rape. The novel addresses prejudice, moral growth, and the loss of innocence through the eyes of a curious child.",
@@ -68,6 +70,7 @@ export const RecommendedBooks: Book[] = [
     title: "1984",
     src: "https://m.media-amazon.com/images/I/71wANojhEKL._AC_UF894,1000_QL80_.jpg",
     price: "$13.99",
+    rating: 4.6,
     description:
       "A dystopian novel exploring totalitarianism and surveillance.",
     longDescription:
@@ -83,6 +86,7 @@ export const RecommendedBooks: Book[] = [
     title: "Pride and Prejudice",
     src: "https://m.media-amazon.com/images/I/712P0p5cXIL._AC_UF894,1000_QL80_.jpg",
     price: "$9.99",
+    rating: 4.7,
     description: "A romantic novel of manners set in Georgian England.",
     longDescription:
       "Jane Austen's witty romantic comedy follows Elizabeth Bennet as she navigates societal expectations and her own prejudices. Her relationship with the proud Mr. Darcy becomes a journey of mutual understanding, challenging assumptions about social class, character, and love.",
@@ -97,6 +101,7 @@ export const RecommendedBooks: Book[] = [
     title: "The Catcher in the Rye",
     src: "https://m.media-amazon.com/images/I/91fQEUwFMyL.jpg",
     price: "$11.99",
+    rating: 4.2,
     description:
       "A coming-of-age story following a teenage protagonist in New York.",
     longDescription:
@@ -112,6 +117,7 @@ export const RecommendedBooks: Book[] = [
     title: "The Hobbit",
     src: "https://m.media-amazon.com/images/I/91ZX8zNpwZL._UF1000,1000_QL80_.jpg",
     price: "$14.99",
+    rating: 4.7,
     description: "An epic fantasy adventure of a hobbit on a quest.",
     longDescription:
       "J.R.R. Tolkien's beloved fantasy follows Bilbo Baggins, a reluctant hobbit who joins a company of dwarves on a treasure hunt. Facing dragons, elves, and trolls, Bilbo discovers courage and wisdom within himself while helping his companions reclaim their lost gold in the magical world of Middle-earth.",
@@ -126,6 +132,7 @@ export const RecommendedBooks: Book[] = [
     title: "Jane Eyre",
     src: "https://m.media-amazon.com/images/I/61FQED7br6L._AC_UF894,1000_QL80_.jpg",
     price: "$12.49",
+    rating: 4.6,
     description: "A gothic romance with a strong female protagonist.",
     longDescription:
       "Charlotte Brontë's gothic romance tells the story of orphaned Jane Eyre, a governess who overcomes hardship and finds love with the mysterious Mr. Rochester. Challenging Victorian conventions, the novel celebrates female independence, inner strength, and the pursuit of equality in love.",
@@ -140,6 +147,7 @@ export const RecommendedBooks: Book[] = [
     title: "Wuthering Heights",
     src: "https://m.media-amazon.com/images/I/51wJZQv6tML._AC_UF894,1000_QL80_.jpg",
     price: "$11.49",
+    rating: 4.4,
     description: "A dark, passionate tale of love and revenge on the moors.",
     longDescription:
       "Emily Brontë's intense gothic novel explores destructive passion and revenge across generations on the Yorkshire moors. Through the turbulent relationship between Heathcliff and Catherine, the narrative reveals how love can become corrupted by social class, pride, and the desire for vengeance.",
@@ -154,6 +162,7 @@ export const RecommendedBooks: Book[] = [
     title: "Brave New World",
     src: "https://m.media-amazon.com/images/I/81fiJzvcB2L._UF1000,1000_QL80_.jpg",
     price: "$13.49",
+    rating: 4.5,
     description: "A science fiction novel about a dystopian future society.",
     longDescription:
       "Aldous Huxley's prophetic dystopia depicts a future where conditioning, drugs, and consumerism maintain social control and happiness. Through the experiences of protagonist Bernard Marx, the novel questions the cost of stability and explores what it means to be truly human in a world of manufactured contentment.",
@@ -168,6 +177,7 @@ export const RecommendedBooks: Book[] = [
     title: "The Lord of the Rings",
     src: "https://img.freepik.com/free-photo/close-book-with-blue-cover_1101-92.jpg?semt=ais_hybrid&w=740&q=80",
     price: "$24.99",
+    rating: 4.9,
     description:
       "An epic fantasy trilogy following the quest to destroy the One Ring.",
     longDescription:
@@ -183,6 +193,7 @@ export const RecommendedBooks: Book[] = [
     title: "Moby Dick",
     src: "https://img.freepik.com/free-photo/close-book-with-blue-cover_1101-92.jpg?semt=ais_hybrid&w=740&q=80",
     price: "$15.99",
+    rating: 4.3,
     description:
       "An adventure novel about obsession and the pursuit of a white whale.",
     longDescription:
@@ -198,6 +209,7 @@ export const RecommendedBooks: Book[] = [
     title: "The Great Expectations",
     src: "https://img.freepik.com/free-photo/close-book-with-blue-cover_1101-92.jpg?semt=ais_hybrid&w=740&q=80",
     price: "$12.99",
+    rating: 1.5,
     description:
       "A bildungsroman about a young orphan's rise in Victorian society.",
     longDescription:
@@ -213,6 +225,7 @@ export const RecommendedBooks: Book[] = [
     title: "The Picture of Dorian Gray",
     src: "https://img.freepik.com/free-photo/close-book-with-blue-cover_1101-92.jpg?semt=ais_hybrid&w=740&q=80",
     price: "$10.49",
+    rating: 4.4,
     description:
       "A philosophical novel exploring beauty, morality, and corruption.",
     longDescription:
