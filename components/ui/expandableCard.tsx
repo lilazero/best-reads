@@ -1,558 +1,250 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/display-name */
 "use client";
 
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import {
-  AnimatePresence,
-  HTMLMotionProps,
-  motion,
-  TargetAndTransition,
-  useMotionValue,
-  useSpring,
-} from "motion/react";
-import useMeasure from "react-use-measure";
+import React, { useEffect, useId, useRef } from "react";
+import Image from "next/image";
+import { AnimatePresence, motion } from "motion/react";
+import { useOutsideClick } from "@/hooks/use-outside-click";
 
-import { cn } from "@/lib/utils";
-
-const springConfig = { stiffness: 200, damping: 20, bounce: 0.2 };
-
-interface ExpandableContextType {
-  isExpanded: boolean; // Indicates whether the component is expanded
-  toggleExpand: () => void; // Function to toggle the expanded state
-  expandDirection: "vertical" | "horizontal" | "both"; // Direction of expansion
-  expandBehavior: "replace" | "push"; // How the expansion affects surrounding content
-  transitionDuration: number; // Duration of the expansion/collapse animation
-  easeType:
-    | "easeInOut"
-    | "easeIn"
-    | "easeOut"
-    | "linear"
-    | [number, number, number, number]; // Easing function for the animation
-  initialDelay: number; // Delay before the animation starts
-  onExpandEnd?: () => void; // Callback function when expansion ends
-  onCollapseEnd?: () => void; // Callback function when collapse ends
+export interface ExpandableCardData {
+  id: string;
+  title: string;
+  description: string;
+  rating?: string;
+  firstTag?: React.ReactNode;
+  src?: string;
+  ctaText?: string;
+  ctaLink?: string;
+  content: React.ReactNode | (() => React.ReactNode);
 }
-
-// Create a context with default values
-const ExpandableContext = createContext<ExpandableContextType>({
-  isExpanded: false,
-  toggleExpand: () => {},
-  expandDirection: "vertical", // 'vertical' | 'horizontal' | 'both' // Direction of expansion
-  expandBehavior: "replace", // How the expansion affects surrounding content
-  transitionDuration: 0.3, // Duration of the expansion/collapse animation
-  easeType: "easeInOut" as const, // Easing function for the animation
-  initialDelay: 0,
-});
-
-// Custom hook to use the ExpandableContext
-const useExpandable = () => useContext(ExpandableContext);
-
-type ExpandablePropsBase = Omit<HTMLMotionProps<"div">, "children">;
-
-interface ExpandableProps extends ExpandablePropsBase {
-  children: ReactNode | ((props: { isExpanded: boolean }) => ReactNode);
-  expanded?: boolean;
-  onToggle?: () => void;
-  transitionDuration?: number;
-  easeType?:
-    | "easeInOut"
-    | "easeIn"
-    | "easeOut"
-    | "linear"
-    | [number, number, number, number];
-  expandDirection?: "vertical" | "horizontal" | "both";
-  expandBehavior?: "replace" | "push";
-  initialDelay?: number;
-  onExpandStart?: () => void;
-  onExpandEnd?: () => void;
-  onCollapseStart?: () => void;
-  onCollapseEnd?: () => void;
-}
-// ROOT Expand component
-const Expandable = React.forwardRef<HTMLDivElement, ExpandableProps>(
-  (
-    {
-      children,
-      expanded,
-      onToggle,
-      transitionDuration = 0.3,
-      easeType = "easeInOut" as const,
-      expandDirection = "vertical",
-      expandBehavior = "replace",
-      initialDelay = 0,
-      onExpandStart,
-      onExpandEnd,
-      onCollapseStart,
-      onCollapseEnd,
-      ...props
-    },
-    ref
-  ) => {
-    // Internal state for expansion when the component is uncontrolled
-    const [isExpandedInternal, setIsExpandedInternal] = useState(false);
-
-    // Use the provided expanded prop if available, otherwise use internal state
-    const isExpanded = expanded !== undefined ? expanded : isExpandedInternal;
-
-    // Use the provided onToggle function if available, otherwise use internal toggle function
-    const toggleExpand =
-      onToggle || (() => setIsExpandedInternal((prev) => !prev));
-
-    // Effect to call onExpandStart or onCollapseStart when isExpanded changes
-    useEffect(() => {
-      if (isExpanded) {
-        onExpandStart?.();
-      } else {
-        onCollapseStart?.();
-      }
-    }, [isExpanded, onExpandStart, onCollapseStart]);
-
-    // Create the context value to be provided to child components
-    const contextValue: ExpandableContextType = {
-      isExpanded,
-      toggleExpand,
-      expandDirection,
-      expandBehavior,
-      transitionDuration,
-      easeType,
-      initialDelay,
-      onExpandEnd,
-      onCollapseEnd,
-    };
-
-    return (
-      <ExpandableContext.Provider value={contextValue}>
-        <motion.div
-          ref={ref}
-          initial={false}
-          transition={{
-            duration: transitionDuration,
-            ease: easeType,
-            delay: initialDelay,
-          }}
-          {...props}
-        >
-          {/* Render children as a function if provided, otherwise render as is */}
-          {typeof children === "function" ? children({ isExpanded }) : children}
-        </motion.div>
-      </ExpandableContext.Provider>
-    );
-  }
-);
-
-// Simplify animation types
-type AnimationPreset = {
-  initial: { [key: string]: any };
-  animate: { [key: string]: any };
-  exit: { [key: string]: any };
-};
-
-// Update ANIMATION_PRESETS type
-const ANIMATION_PRESETS: Record<string, AnimationPreset> = {
-  fade: {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
-  },
-  "slide-up": {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: 20 },
-  },
-  "slide-down": {
-    initial: { opacity: 0, y: -20 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -20 },
-  },
-  "slide-left": {
-    initial: { opacity: 0, x: 20 },
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: 20 },
-  },
-  "slide-right": {
-    initial: { opacity: 0, x: -20 },
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -20 },
-  },
-  scale: {
-    initial: { opacity: 0, scale: 0.8 },
-    animate: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.8 },
-  },
-  rotate: {
-    initial: { opacity: 0, rotate: -10 },
-    animate: { opacity: 1, rotate: 0 },
-    exit: { opacity: 0, rotate: -10 },
-  },
-  "blur-sm": {
-    initial: { opacity: 0, filter: "blur(4px)" },
-    animate: { opacity: 1, filter: "blur(0px)" },
-    exit: { opacity: 0, filter: "blur(4px)" },
-  },
-  "blur-md": {
-    initial: { opacity: 0, filter: "blur(8px)" },
-    animate: { opacity: 1, filter: "blur(0px)" },
-    exit: { opacity: 0, filter: "blur(8px)" },
-  },
-  "blur-lg": {
-    initial: { opacity: 0, filter: "blur(16px)" },
-    animate: { opacity: 1, filter: "blur(0px)" },
-    exit: { opacity: 0, filter: "blur(16px)" },
-  },
-};
-
-// Update type definitions
-type AnimationConfig = {
-  initial: { [key: string]: number | string };
-  animate: { [key: string]: number | string };
-  exit: { [key: string]: number | string };
-};
-
-// Props for defining custom animations
-interface AnimationProps {
-  initial?: TargetAndTransition;
-  animate?: TargetAndTransition;
-  exit?: TargetAndTransition;
-  transition?: any;
-}
-
-// Inside ExpandableContent component
-const getAnimationProps = (
-  preset: keyof typeof ANIMATION_PRESETS | undefined,
-  animateIn?: AnimationProps,
-  animateOut?: AnimationProps
-) => {
-  const defaultAnimation = {
-    initial: {},
-    animate: {},
-    exit: {},
-  };
-
-  const presetAnimation = preset ? ANIMATION_PRESETS[preset] : defaultAnimation;
-
-  return {
-    initial: presetAnimation.initial,
-    animate: presetAnimation.animate,
-    exit: animateOut?.exit || presetAnimation.exit,
-  };
-};
-
-// Wrap this around items in the card that you want to be hidden then animated in on expansion
-const ExpandableContent = React.forwardRef<
-  HTMLDivElement,
-  Omit<HTMLMotionProps<"div">, "ref"> & {
-    preset?: keyof typeof ANIMATION_PRESETS;
-    animateIn?: AnimationProps;
-    animateOut?: AnimationProps;
-    stagger?: boolean;
-    staggerChildren?: number;
-    keepMounted?: boolean;
-  }
->(
-  (
-    {
-      children,
-      preset,
-      animateIn,
-      animateOut,
-      stagger = false,
-      staggerChildren = 0.1,
-      keepMounted = false,
-      ...props
-    },
-    ref
-  ) => {
-    const { isExpanded, transitionDuration, easeType } = useExpandable();
-    // useMeasure is used to measure the height of the content
-    const [measureRef, { height: measuredHeight }] = useMeasure();
-    // useMotionValue creates a value that can be animated smoothly
-    const animatedHeight = useMotionValue(0);
-    // useSpring applies a spring animation to the height value
-    const smoothHeight = useSpring(animatedHeight, springConfig);
-
-    useEffect(() => {
-      // Animate the height based on whether the content is expanded or collapsed
-      if (isExpanded) {
-        animatedHeight.set(measuredHeight);
-      } else {
-        animatedHeight.set(0);
-      }
-    }, [isExpanded, measuredHeight, animatedHeight]);
-
-    const animationProps = getAnimationProps(preset, animateIn, animateOut);
-
-    return (
-      // This motion.div animates the height of the content
-      <motion.div
-        ref={ref}
-        style={{
-          height: smoothHeight,
-          overflow: "hidden",
-        }}
-        transition={{ duration: transitionDuration, ease: easeType }}
-        {...props}
-      >
-        {/* AnimatePresence handles the entering and exiting of components */}
-        <AnimatePresence initial={false}>
-          {(isExpanded || keepMounted) && (
-            // This motion.div handles the animation of the content itself
-            <motion.div
-              ref={measureRef}
-              initial={animationProps.initial}
-              animate={animationProps.animate}
-              exit={animationProps.exit}
-              transition={{ duration: transitionDuration, ease: easeType }}
-            >
-              {stagger ? (
-                // If stagger is true, we apply a staggered animation to the children
-                <motion.div
-                  variants={{
-                    hidden: {},
-                    visible: {
-                      transition: {
-                        staggerChildren: staggerChildren,
-                      },
-                    },
-                  }}
-                  initial="hidden"
-                  animate="visible"
-                >
-                  {React.Children.map(
-                    children as React.ReactNode,
-                    (child, index) => (
-                      <motion.div
-                        key={`${child?.toLocaleString}-${index}`}
-                        variants={{
-                          hidden: { opacity: 0, y: 20 },
-                          visible: { opacity: 1, y: 0 },
-                        }}
-                      >
-                        {child}
-                      </motion.div>
-                    )
-                  )}
-                </motion.div>
-              ) : (
-                children
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-    );
-  }
-);
 
 interface ExpandableCardProps {
-  children: ReactNode;
-  className?: string;
-  collapsedSize?: { width?: number; height?: number }; // Size when collapsed
-  expandedSize?: { width?: number; height?: number }; // Size when expanded
-  hoverToExpand?: boolean; // Whether to expand on hover
-  expandDelay?: number; // Delay before expanding
-  collapseDelay?: number; // Delay before collapsing
+  card: ExpandableCardData;
+  isActive: boolean;
+  onActivate: () => void;
+  onDeactivate: () => void;
+  cardClassName?: string;
 }
 
-const ExpandableCard = React.forwardRef<HTMLDivElement, ExpandableCardProps>(
-  (
-    {
-      children,
-      className = "",
-      collapsedSize = { width: 320, height: 211 },
-      expandedSize = { width: 480, height: undefined },
-      hoverToExpand = false,
-      expandDelay = 0,
-      collapseDelay = 0,
-      ...props
-    },
-    ref
-  ) => {
-    // Get the expansion state and toggle function from the ExpandableContext
-    const { isExpanded, toggleExpand, expandDirection } = useExpandable();
+export function ExpandableCard({
+  card,
+  isActive,
+  onActivate,
+  onDeactivate,
+  cardClassName = "p-4 flex flex-col hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer",
+}: ExpandableCardProps) {
+  const id = useId();
+  const ref = useRef<HTMLDivElement>(null!);
 
-    // Use useMeasure hook to get the dimensions of the content
-    const [measureRef, { width, height }] = useMeasure();
-
-    // Create motion values for width and height
-    const animatedWidth = useMotionValue(collapsedSize.width || 0);
-    const animatedHeight = useMotionValue(collapsedSize.height || 0);
-
-    // Apply spring animation to the motion values
-    const smoothWidth = useSpring(animatedWidth, springConfig);
-    const smoothHeight = useSpring(animatedHeight, springConfig);
-
-    // Effect to update the animated dimensions when expansion state changes
-    useEffect(() => {
-      if (isExpanded) {
-        animatedWidth.set(expandedSize.width || width);
-        animatedHeight.set(expandedSize.height || height);
-      } else {
-        animatedWidth.set(collapsedSize.width || width);
-        animatedHeight.set(collapsedSize.height || height);
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape" && isActive) {
+        onDeactivate();
       }
-    }, [
-      isExpanded,
-      collapsedSize,
-      expandedSize,
-      width,
-      height,
-      animatedWidth,
-      animatedHeight,
-    ]);
+    }
 
-    // Handler for hover start event
-    const handleHover = () => {
-      if (hoverToExpand && !isExpanded) {
-        setTimeout(toggleExpand, expandDelay);
-      }
-    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isActive, onDeactivate]);
 
-    // Handler for hover end event
-    const handleHoverEnd = () => {
-      if (hoverToExpand && isExpanded) {
-        setTimeout(toggleExpand, collapseDelay);
-      }
-    };
+  useOutsideClick(ref, () => {
+    if (isActive) {
+      onDeactivate();
+    }
+  });
 
-    return (
-      <motion.div
-        ref={ref}
-        className={cn("cursor-pointer", className)}
-        style={{
-          // Set width and height based on expansion direction
-          width:
-            expandDirection === "vertical" ? collapsedSize.width : smoothWidth,
-          height:
-            expandDirection === "horizontal"
-              ? collapsedSize.height
-              : smoothHeight,
-        }}
-        transition={springConfig}
-        onHoverStart={handleHover}
-        onHoverEnd={handleHoverEnd}
-        {...props}
-      >
-        <div
-          className={cn(
-            "grid grid-cols-1 rounded-lg sm:rounded-xl md:rounded-[2rem]",
-            "shadow-[inset_0_0_1px_1px_hsl(var(--border)/0.3)] dark:shadow-[inset_0_0_1px_1px_hsl(var(--border)/0.5)]",
-            "sm:shadow-[inset_0_0_2px_1px_hsl(var(--border)/0.3)] dark:sm:shadow-[inset_0_0_2px_1px_hsl(var(--border)/0.5)]",
-            "ring-1 ring-border/50",
-            "max-w-[calc(100%-1rem)] sm:max-w-[calc(100%-2rem)] md:max-w-[calc(100%-4rem)]",
-            "mx-auto w-full",
-            "transition-all duration-300 ease-in-out"
-          )}
-        >
-          {/* Nested divs purely for styling and layout (the shadow ring around the card) */}
-          <div className="grid grid-cols-1 rounded-lg sm:rounded-xl md:rounded-[2rem] p-1 sm:p-1.5 md:p-2 shadow-md">
-            <div className="rounded-md sm:rounded-lg md:rounded-3xl bg-white dark:bg-muted p-2 sm:p-3 md:p-4 shadow-xl ring-1 ring-border/50">
-              <div className="w-full h-full overflow-hidden">
-                {/* Ref for measuring content dimensions (so we can let framer know to animate into the dimensions) */}
-                <div ref={measureRef} className="flex flex-col h-full">
-                  {children}
+  return (
+    <>
+      <AnimatePresence>
+        {isActive && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/20 h-full w-full z-10"
+            />
+            <div className="fixed inset-0 grid place-items-center z-100">
+              <motion.button
+                key={`button-${card.id}-${id}`}
+                layout
+                initial={{
+                  opacity: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                }}
+                exit={{
+                  opacity: 0,
+                  transition: {
+                    duration: 0.05,
+                  },
+                }}
+                className="flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
+                onClick={onDeactivate}
+              >
+                <CloseIcon />
+              </motion.button>
+              <motion.div
+                layoutId={`card-${card.id}-${id}`}
+                ref={ref}
+                className="w-full max-w-[500px] h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
+              >
+                {card.src && (
+                  <motion.div layoutId={`image-${card.id}-${id}`}>
+                    <Image
+                      width={500}
+                      height={320}
+                      src={card.src}
+                      alt={card.title}
+                      className="w-full h-80 lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg object-cover object-top"
+                    />
+                  </motion.div>
+                )}
+
+                <div>
+                  <div className="flex justify-between items-start p-4">
+                    <div className="">
+                      <motion.h3
+                        layoutId={`title-${card.id}-${id}`}
+                        className="font-medium text-neutral-700 dark:text-neutral-200 text-base"
+                      >
+                        {card.title}
+                      </motion.h3>
+                      <motion.p
+                        layoutId={`description-${card.id}-${id}`}
+                        className="text-neutral-600 dark:text-neutral-400 text-base"
+                      >
+                        {card.description}
+                      </motion.p>
+                    </div>
+
+                    {card.ctaText && card.ctaLink && (
+                      <motion.a
+                        layout
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        href={card.ctaLink}
+                        target="_blank"
+                        className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 text-white"
+                      >
+                        {card.ctaText}
+                      </motion.a>
+                    )}
+                  </div>
+                  <div className="pt-4 relative px-4">
+                    <motion.div
+                      layout
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="text-neutral-600 text-xs md:text-sm lg:text-base h-40 md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400  [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
+                    >
+                      {typeof card.content === "function"
+                        ? card.content()
+                        : card.content}
+                    </motion.div>
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
+          </>
+        )}
+      </AnimatePresence>
+      <motion.div
+        layoutId={`card-${card.id}-${id}`}
+        onClick={onActivate}
+        className={cardClassName}
+      >
+        <div className="flex gap-4 flex-col w-full">
+          {card.src && (
+            <motion.div layoutId={`image-${card.id}-${id}`}>
+              <Image
+                width={400}
+                height={240}
+                src={card.src}
+                alt={card.title}
+                className="h-60 w-full rounded-lg object-cover object-top"
+              />
+            </motion.div>
+          )}
+          <div className="flex justify-center items-center flex-col w-full">
+            <div className="flex items-center gap-2 w-full justify-between">
+              <div className="flex items-center gap-2 min-w-0">
+                {card.rating && (
+                  <div className="flex items-center gap-0.5 shrink-0">
+                    {[...Array(5)].map((_, i) => {
+                      const ratingValue = parseFloat(card.rating || "0");
+                      const isYellow = i < Math.round(ratingValue);
+                      return (
+                        <svg
+                          key={i}
+                          className={`w-2.5 h-2.5 ${
+                            isYellow
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "fill-gray-300 text-gray-300 dark:fill-gray-600 dark:text-gray-600"
+                          }`}
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+              <motion.h3
+                layoutId={`title-${card.id}-${id}`}
+                className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left text-base truncate"
+              >
+                {card.title}
+              </motion.h3>
+              {card.firstTag && <div className="shrink-0">{card.firstTag}</div>}
+            </div>
+            <motion.p
+              layoutId={`description-${card.id}-${id}`}
+              className="text-neutral-600 dark:text-neutral-400 text-center md:text-left text-base w-full"
+            >
+              {card.description}
+            </motion.p>
           </div>
         </div>
       </motion.div>
-    );
-  }
-);
-
-ExpandableCard.displayName = "ExpandableCard";
-
-// I'm telling you we just have to expand 🤌💵
-const ExpandableTrigger = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ children, className, ...props }, ref) => {
-  const { toggleExpand } = useExpandable();
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      toggleExpand();
-    }
-  };
-
-  return (
-    <div
-      ref={ref}
-      onClick={toggleExpand}
-      onKeyDown={handleKeyDown}
-      role="button"
-      tabIndex={0}
-      aria-label="Toggle expand"
-      className={cn("cursor-pointer", className)}
-      {...props}
-    >
-      {children}
-    </div>
+    </>
   );
-});
+}
 
-ExpandableTrigger.displayName = "ExpandableTrigger";
-
-const ExpandableCardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
-    {...props}
-  >
-    <motion.div layout className="flex justify-between items-start">
-      {children}
-    </motion.div>
-  </div>
-));
-
-ExpandableCardHeader.displayName = "ExpandableCardHeader";
-
-const ExpandableCardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("p-6 pt-0 px-4 overflow-hidden flex-grow", className)}
-    {...props}
-  >
-    <motion.div layout>{children}</motion.div>
-  </div>
-));
-ExpandableCardContent.displayName = "ExpandableCardContent";
-
-const ExpandableCardFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex items-center p-4 pt-0", className)}
-    {...props}
-  />
-));
-ExpandableCardFooter.displayName = "ExpandableCardFooter";
-
-export {
-  Expandable,
-  useExpandable,
-  ExpandableCard,
-  ExpandableContent,
-  ExpandableContext,
-  ExpandableTrigger,
-  ExpandableCardHeader,
-  ExpandableCardContent,
-  ExpandableCardFooter,
+export const CloseIcon = () => {
+  return (
+    <motion.svg
+      initial={{
+        opacity: 0,
+      }}
+      animate={{
+        opacity: 1,
+      }}
+      exit={{
+        opacity: 0,
+        transition: {
+          duration: 0.05,
+        },
+      }}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4 text-black"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M18 6l-12 12" />
+      <path d="M6 6l12 12" />
+    </motion.svg>
+  );
 };
