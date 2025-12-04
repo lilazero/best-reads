@@ -169,6 +169,12 @@ export function ExpandableCard({
             </motion.div>
           )}
           <div className="flex justify-center items-center flex-col w-full">
+            <motion.h3
+              layoutId={`title-${card.id}-${id}`}
+              className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left text-base truncate"
+            >
+              {card.title}
+            </motion.h3>
             <div className="flex items-center gap-2 w-full justify-between">
               <div className="flex items-center gap-2 min-w-0">
                 {card.rating && (
@@ -195,12 +201,6 @@ export function ExpandableCard({
                   </div>
                 )}
               </div>
-              <motion.h3
-                layoutId={`title-${card.id}-${id}`}
-                className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left text-base truncate"
-              >
-                {card.title}
-              </motion.h3>
               {card.firstTag && <div className="shrink-0">{card.firstTag}</div>}
             </div>
             <motion.p
