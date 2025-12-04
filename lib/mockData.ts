@@ -1,5 +1,4 @@
-import { Tag } from "./types";
-import { Book } from "./types";
+import { Tag, Book, Group, GroupTag, GroupDetail } from "./types";
 
 export const tags: Tag[] = [
   { id: "t1", value: "Classic", icon: "BookMarked" },
@@ -237,3 +236,241 @@ export const RecommendedBooks: Book[] = [
     ],
   },
 ];
+
+export const FeaturedGroups: Group[] = [
+  {
+    id: "988700",
+    name: "Read With Jenna (Official)",
+    description:
+      "When anyone on the TODAY team is looking for a book recommendation, there is only one person to turn to: Jenna Bush Hager.\n\nJenna will select a book and as you read along, we'll be posting updates ...",
+    iconUrl: "https://images.gr-assets.com/groups/1643040655p3/988700.jpg",
+    membersCount: 29532,
+    lastActiveAt: "2025-11-10T17:22:02.000-08:00",
+    url: "/clubs/988700",
+  },
+];
+
+export const PopularGroups: Group[] = [
+  {
+    id: "220",
+    name: "Goodreads Librarians Group",
+    description:
+      "Goodreads Librarians are volunteers who help ensure the accuracy of information about books and authors in the Goodreads' catalog. The Goodreads Librarians Group is the official group for requestin...",
+    iconUrl: "https://images.gr-assets.com/groups/1269147049p3/220.jpg",
+    membersCount: 301962,
+    lastActiveAt: "2025-12-04T03:36:19.000-08:00",
+    url: "/clubs/220",
+  },
+  {
+    id: "185",
+    name: "What's the Name of That Book???",
+    description:
+      "Can't remember the title of a book you read? Come search our bookshelves and discussion posts. If you don't find it there, post a description on our UNSOLVED message board.\n\n1. GENRE and PLOT DETAI...",
+    iconUrl: "https://images.gr-assets.com/groups/1713666340p3/185.jpg",
+    membersCount: 119399,
+    lastActiveAt: "2025-12-04T01:05:23.000-08:00",
+    url: "/clubs/185",
+  },
+  {
+    id: "345436",
+    name: "Reese's Book Club x Hello Sunshine",
+    description:
+      "Hey Y'all,\n\nWe've been reading together for awhile and we don't know about you, but we're ready to hear your thoughts and opinions. This group is a place where we can discuss Reese's Picks.\n\nAfter ...",
+    iconUrl: "https://images.gr-assets.com/groups/1509989934p3/345436.jpg",
+    membersCount: 169462,
+    lastActiveAt: "2025-12-04T01:52:42.000-08:00",
+    url: "/clubs/345436",
+  },
+  {
+    id: "179584",
+    name: "Our Shared Shelf",
+    description:
+      "OUR SHARED SHELF IS CURRENTLY DORMANT AND NOT MANAGED BY EMMA AND HER TEAM.\n\nDear Readers, \n\nAs part of my work with UN Women, I have started reading as many books and essays about equality as I ca...",
+    iconUrl: "https://images.gr-assets.com/groups/1479936067p3/179584.jpg",
+    membersCount: 223414,
+    lastActiveAt: "2025-12-02T07:31:01.000-08:00",
+    url: "/clubs/179584",
+  },
+  {
+    id: "85538",
+    name: "Oprah's Book Club (Official)",
+    description:
+      "Welcome to the official Oprah's Book Club group. OBC is the interactive, multi-platform reading club bringing passionate readers together to discuss inspiring stories.\n\nGo to www.oprah.com/BookClub...",
+    iconUrl: "https://images.gr-assets.com/groups/1470141005p3/85538.jpg",
+    membersCount: 84549,
+    lastActiveAt: "2025-12-03T13:38:41.000-08:00",
+    url: "/clubs/85538",
+  },
+  {
+    id: "64233",
+    name: "Addicted to YA",
+    description:
+      "Sometimes, you read a book and it fills you with this weird evangelical zeal, and you become convinced that the shattered world will never be put back together unless and until all living humans r...",
+    iconUrl: "https://images.gr-assets.com/groups/1329254899p3/64233.jpg",
+    membersCount: 66082,
+    lastActiveAt: "2025-12-04T02:58:18.000-08:00",
+    url: "/clubs/64233",
+  },
+  {
+    id: "1182275",
+    name: "hot girls read books",
+    description:
+      "A little group for girls and their friends to keep up with books that they're reading :)",
+    iconUrl: "https://images.gr-assets.com/groups/1655085512p3/1182275.jpg",
+    membersCount: 105254,
+    lastActiveAt: "2025-12-04T03:22:44.000-08:00",
+    url: "/clubs/1182275",
+  },
+  {
+    id: "1103665",
+    name: "Booktok 📚",
+    description:
+      "A place for booktokers to interact with each other and share the love",
+    iconUrl: "https://images.gr-assets.com/groups/1594322149p3/1103665.jpg",
+    membersCount: 215870,
+    lastActiveAt: "2025-12-04T03:35:02.000-08:00",
+    url: "/clubs/1103665",
+  },
+];
+
+export const MyBooksGroups: Group[] = [
+  {
+    id: "604678",
+    name: "Leaders' Book Club",
+    description:
+      "We read books that can make us better leaders. We read business, philosophy, psychology, non-fiction, self-development books, or any book that can reframe the way we see the world and enhance our a...",
+    iconUrl: "https://images.gr-assets.com/groups/1526760642p3/604678.jpg",
+    membersCount: 314,
+    lastActiveAt: "2025-09-27T10:01:20.000-07:00",
+    url: "/clubs/604678",
+  },
+];
+
+export const GroupTags: GroupTag[] = [
+  { name: "bookclub", url: "/group/show_tag/bookclub" },
+  { name: "fantasy", url: "/group/show_tag/fantasy" },
+  { name: "romance", url: "/group/show_tag/romance" },
+  { name: "fiction", url: "/group/show_tag/fiction" },
+  { name: "book-club", url: "/group/show_tag/book-club" },
+  { name: "young-adult", url: "/group/show_tag/young-adult" },
+  { name: "books", url: "/group/show_tag/books" },
+  { name: "roleplay", url: "/group/show_tag/roleplay" },
+  { name: "fun", url: "/group/show_tag/fun" },
+  { name: "science-fiction", url: "/group/show_tag/science-fiction" },
+  { name: "mystery", url: "/group/show_tag/mystery" },
+  { name: "rp", url: "/group/show_tag/rp" },
+  {
+    name: "bookclub-any-type-of-book",
+    url: "/group/show_tag/bookclub-any-type-of-book",
+  },
+  { name: "ya", url: "/group/show_tag/ya" },
+  { name: "horror", url: "/group/show_tag/horror" },
+  { name: "thriller", url: "/group/show_tag/thriller" },
+];
+
+export const GroupDetails: Record<string, GroupDetail> = {
+  "988700": {
+    id: "988700",
+    name: "Read With Jenna (Official)",
+    description:
+      "When anyone on the TODAY team is looking for a book recommendation, there is only one person to turn to: Jenna Bush Hager.",
+    fullDescription:
+      "When anyone on the TODAY team is looking for a book recommendation, there is only one person to turn to: Jenna Bush Hager.\n\nJenna will select a book and as you read along, we'll be posting updates, behind-the-scenes extras, and host live conversations with Jenna and the authors.\n\nWe hope you'll join us!",
+    iconUrl: "https://images.gr-assets.com/groups/1643040655p3/988700.jpg",
+    membersCount: 29532,
+    lastActiveAt: "2025-11-10T17:22:02.000-08:00",
+    url: "/clubs/988700",
+    rules: [
+      "Be respectful to all members",
+      "Stay on topic - book discussions only",
+      "No spam or self-promotion",
+    ],
+    moderators: ["Jenna Bush Hager", "TODAY Show Team"],
+    topics: [
+      {
+        id: "1",
+        title: "December Book Discussion",
+        author: "JennaOfficial",
+        lastPostAt: "2025-12-03T14:30:00.000-08:00",
+        postsCount: 234,
+      },
+      {
+        id: "2",
+        title: "What are you reading this week?",
+        author: "BookLover42",
+        lastPostAt: "2025-12-04T02:15:00.000-08:00",
+        postsCount: 156,
+      },
+    ],
+  },
+  "220": {
+    id: "220",
+    name: "Goodreads Librarians Group",
+    description:
+      "Goodreads Librarians are volunteers who help ensure the accuracy of information about books and authors in the Goodreads' catalog.",
+    fullDescription:
+      "Goodreads Librarians are volunteers who help ensure the accuracy of information about books and authors in the Goodreads' catalog. The Goodreads Librarians Group is the official group for requesting changes to book records, reporting issues, and discussing librarian tools and procedures.\n\nPlease read the guidelines before posting!",
+    iconUrl: "https://images.gr-assets.com/groups/1269147049p3/220.jpg",
+    membersCount: 301962,
+    lastActiveAt: "2025-12-04T03:36:19.000-08:00",
+    url: "/clubs/220",
+    rules: [
+      "Read the Librarian Manual before posting",
+      "Use the correct discussion thread for your request",
+      "Provide book ISBN when possible",
+      "Be patient - volunteers review requests as they can",
+    ],
+    moderators: ["LibrarianTeam", "GoodreadsStaff"],
+    topics: [
+      {
+        id: "1",
+        title: "Book Data Corrections",
+        author: "LibraryHelper",
+        lastPostAt: "2025-12-04T03:36:19.000-08:00",
+        postsCount: 1847,
+      },
+      {
+        id: "2",
+        title: "Author Information Updates",
+        author: "BookKeeper",
+        lastPostAt: "2025-12-04T01:20:00.000-08:00",
+        postsCount: 892,
+      },
+    ],
+  },
+  "185": {
+    id: "185",
+    name: "What's the Name of That Book???",
+    description:
+      "Can't remember the title of a book you read? Come search our bookshelves and discussion posts.",
+    fullDescription:
+      "Can't remember the title of a book you read? Come search our bookshelves and discussion posts. If you don't find it there, post a description on our UNSOLVED message board.\n\nProvide as many details as you can:\n1. GENRE and PLOT DETAILS\n2. PHYSICAL DESCRIPTION of the book\n3. WHEN you read it\n\nOur community is amazing at finding lost books!",
+    iconUrl: "https://images.gr-assets.com/groups/1713666340p3/185.jpg",
+    membersCount: 119399,
+    lastActiveAt: "2025-12-04T01:05:23.000-08:00",
+    url: "/clubs/185",
+    rules: [
+      "One book per thread",
+      "Include as many details as possible",
+      "Mark as solved when found",
+      "No homework requests",
+    ],
+    moderators: ["BookDetective", "MysteryReader"],
+    topics: [
+      {
+        id: "1",
+        title: "UNSOLVED: YA book with time travel",
+        author: "SearchingReader",
+        lastPostAt: "2025-12-04T01:05:23.000-08:00",
+        postsCount: 12,
+      },
+      {
+        id: "2",
+        title: "SOLVED: Mystery with lighthouse setting",
+        author: "HappyReader",
+        lastPostAt: "2025-12-03T22:45:00.000-08:00",
+        postsCount: 8,
+      },
+    ],
+  },
+};
