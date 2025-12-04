@@ -40,7 +40,7 @@ export default function Header() {
                         Browse all books in the library.
                       </div>
                     </NavigationMenuLink>
-                    <NavigationMenuLink render={<Link href="#" />}>
+                    <NavigationMenuLink render={<Link href="/clubs" />}>
                       <div className="font-medium">Clubs</div>
                       <div className="text-muted-foreground">
                         Find like minded readers and join book clubs.
