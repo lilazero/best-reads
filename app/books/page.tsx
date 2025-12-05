@@ -4,8 +4,13 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchBooksAndTags, refreshBookCount } from "@/lib/fetchBooksAndTags";
 import BookCardList from "@/components/DashboardComponents/BookCardList";
-import SearchBar from "@/components/DashboardComponents/SearchBar";
-import TagFilter from "@/components/BooksListComponents/TagFilter";
+import TagFilter from "@/components/BooksListComponents/SearchAndTagFilter";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Pagination,
   PaginationContent,
@@ -15,7 +20,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Tags } from "lucide-react";
 
 interface BooksPageProps {
   searchParams: Promise<{ tag?: string; page?: string }>;
@@ -23,6 +28,7 @@ interface BooksPageProps {
 
 export default function BooksPage({ searchParams }: BooksPageProps) {
   const currentSearchParams = useSearchParams();
+  const selectedTag = currentSearchParams.get("tag");
 
   const [error, setError] = useState<string | null>(null);
   const [books, setBooks] = useState<
@@ -155,28 +161,73 @@ export default function BooksPage({ searchParams }: BooksPageProps) {
 
   return (
     <div className="flex items-center flex-col min-h-screen mt-3 font-sans dark:bg-black">
-      <h2 className="text-2xl font-bold mb-3 mt-3 px-4">All Books</h2>
       {error && <p className="text-red-500">{error}</p>}
-      <TagFilter tags={tags} />
 
-      {/* Book count display with refresh button */}
-      {totalCount > 0 && (
-        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 ">
-          <span className="text-[10px]">
-            Showing {startItem}-{endItem} of {totalCount} books
-          </span>
-          <button
-            onClick={handleRefreshCount}
-            disabled={isRefreshing}
-            className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors disabled:opacity-50"
-            title="Refresh book count"
-          >
-            <RefreshCw
-              className={`w-2 h-2 ${isRefreshing ? "animate-spin" : ""}`}
-            />
-          </button>
+      {/* Book count, search bar, and filtering info - all inline */}
+      <div className="w-full max-w-6xl px-4 mb-3 flex items-center justify-between gap-4">
+        <h2 className="text-2xl font-bold ">All Books</h2>
+
+        {/* Search bar in center */}
+        <div className="flex-1 flex justify-center">
+          <TagFilter tags={tags} books={books} />
         </div>
-      )}
+
+        {/* Filter indicator on right */}
+        <div className="min-w-fit flex-col">
+          {selectedTag && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground cursor-help">
+                    <Tags className="h-4 w-4" />
+                    <span className="border-b border-dotted border-muted-foreground">
+                      Filtering by:{" "}
+                      <strong className="text-foreground">{selectedTag}</strong>
+                    </span>
+                    <button
+                      onClick={() => {
+                        const params = new URLSearchParams();
+                        window.location.href = `/books${
+                          params.toString() ? `?${params}` : ""
+                        }`;
+                      }}
+                      className="ml-1 text-xs underline hover:text-foreground"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    Search results will only show books in the {selectedTag}{" "}
+                    genre
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+          {/* Book count on left */}
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 min-w-fit">
+            {totalCount > 0 && (
+              <>
+                <span className="text-sm">
+                  Showing {startItem}-{endItem} of {totalCount} books
+                </span>
+                <button
+                  onClick={handleRefreshCount}
+                  disabled={isRefreshing}
+                  className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors disabled:opacity-50"
+                  title="Refresh book count"
+                >
+                  <RefreshCw
+                    className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`}
+                  />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
 
       {books.length === 0 ? (
         <p className="text-gray-500 mt-8">No books found with this tag.</p>
