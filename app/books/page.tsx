@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchBooksAndTags, refreshBookCount } from "@/lib/fetchBooksAndTags";
 import BookCardList from "@/components/DashboardComponents/BookCardList";
-import TagFilter from "@/components/BooksListComponents/SearchAndTagFilter";
+import SearchAndTagFilter from "@/components/BooksListComponents/SearchAndTagFilter";
 import {
   Tooltip,
   TooltipContent,
@@ -169,7 +169,7 @@ export default function BooksPage({ searchParams }: BooksPageProps) {
 
         {/* Search bar in center */}
         <div className="flex-1 flex justify-center">
-          <TagFilter tags={tags} books={books} />
+          <SearchAndTagFilter tags={tags} books={books} />
         </div>
 
         {/* Filter indicator on right */}
