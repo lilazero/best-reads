@@ -45,9 +45,7 @@ interface SearchItem {
 interface TagFilterProps {
   tags: Tag[];
   books: BookType[];
-  onTagChange?: (tag: string | null) => void;
 }
-
 export default function SearchAndTagFilter({ tags, books }: TagFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
