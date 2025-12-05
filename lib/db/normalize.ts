@@ -3,6 +3,11 @@ export const normalizeValue = (value: unknown): unknown => {
   if (value == null) return value;
 
   if (typeof value === "object") {
+    // Check array first to preserve structure
+    if (Array.isArray(value)) {
+      return value.map((item) => normalizeValue(item));
+    }
+
     const maybeHex = value as { toHexString?: () => string };
     if (typeof maybeHex.toHexString === "function") {
       return maybeHex.toHexString();
@@ -14,10 +19,6 @@ export const normalizeValue = (value: unknown): unknown => {
       maybeString.toString !== Object.prototype.toString
     ) {
       return maybeString.toString();
-    }
-
-    if (Array.isArray(value)) {
-      return value.map((item) => normalizeValue(item));
     }
 
     return Object.fromEntries(
