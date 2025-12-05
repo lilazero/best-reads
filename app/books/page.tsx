@@ -22,11 +22,7 @@ import {
 } from "@/components/ui/pagination";
 import { RefreshCw, Tags } from "lucide-react";
 
-interface BooksPageProps {
-  searchParams: Promise<{ tag?: string; page?: string }>;
-}
-
-export default function BooksPage({ searchParams }: BooksPageProps) {
+export default function BooksPage() {
   const currentSearchParams = useSearchParams();
   const selectedTag = currentSearchParams.get("tag");
 
@@ -44,9 +40,8 @@ export default function BooksPage({ searchParams }: BooksPageProps) {
 
   useEffect(() => {
     const loadData = async () => {
-      const params = await searchParams;
-      const selectedTag = params.tag;
-      const page = parseInt(params.page || "1", 10);
+      const selectedTag = currentSearchParams.get("tag") || undefined;
+      const page = parseInt(currentSearchParams.get("page") || "1", 10);
 
       const result = await fetchBooksAndTags(selectedTag, page);
       setBooks(result.books);
@@ -58,7 +53,7 @@ export default function BooksPage({ searchParams }: BooksPageProps) {
     };
 
     loadData();
-  }, [searchParams]);
+  }, [currentSearchParams]);
 
   const handleRefreshCount = async () => {
     setIsRefreshing(true);
