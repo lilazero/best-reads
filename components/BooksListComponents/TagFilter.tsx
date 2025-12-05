@@ -1,11 +1,22 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { BookOpen, Tags } from "lucide-react";
 
 interface Tag {
   id: string;
   value: string;
   icon?: string;
+  count?: number;
 }
 
 interface TagFilterProps {
@@ -16,48 +27,95 @@ export default function TagFilter({ tags }: TagFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedTag = searchParams.get("tag");
+  const [open, setOpen] = useState(false);
 
-  const handleTagClick = (tagValue: string) => {
-    if (selectedTag === tagValue) {
-      // If clicking the same tag, clear the filter
+  // Keyboard shortcut: Ctrl+J or Cmd+J to open
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "j" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((open) => !open);
+      }
+    };
+
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
+
+  const handleTagSelect = (tagValue: string | null) => {
+    setOpen(false);
+    if (tagValue === null) {
       router.push("/books");
     } else {
-      // Apply the tag filter
       router.push(`/books?tag=${encodeURIComponent(tagValue)}`);
     }
   };
 
-  const handleShowAll = () => {
-    router.push("/books");
-  };
-
   return (
     <div className="w-full max-w-6xl px-4 mb-8">
-      <div className="flex flex-wrap gap-3 justify-center">
+      {/* Trigger button and hint */}
+      <div className="flex flex-col items-center gap-3">
         <button
-          onClick={handleShowAll}
-          className={`px-6 py-2 rounded-full font-medium transition-all ${
-            !selectedTag
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
-          }`}
+          onClick={() => setOpen(true)}
+          className="flex items-center gap-2 px-6 py-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600 transition-all"
         >
-          All Books
+          <Tags className="w-4 h-4" />
+          <span>
+            {selectedTag ? (
+              <>
+                Filtering by: <strong>{selectedTag}</strong>
+              </>
+            ) : (
+              "Browse by Genre"
+            )}
+          </span>
+          <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+            <span className="text-xs">⌘</span>J
+          </kbd>
         </button>
-        {tags.map((tag) => (
-          <button
-            key={tag.value}
-            onClick={() => handleTagClick(tag.value)}
-            className={`px-6 py-2 rounded-full font-medium transition-all ${
-              selectedTag === tag.value
-                ? "bg-blue-600 text-white shadow-lg"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
-            }`}
-          >
-            {tag.value}
-          </button>
-        ))}
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Click or press{" "}
+          <kbd className="px-1.5 py-0.5 text-xs bg-gray-200 dark:bg-gray-700 rounded">
+            Ctrl+J
+          </kbd>{" "}
+          to browse by genre
+        </p>
       </div>
+
+      {/* Command Dialog */}
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <CommandInput placeholder="Search genres..." />
+        <CommandList>
+          <CommandEmpty>No genre found.</CommandEmpty>
+          <CommandGroup heading="Genres">
+            <CommandItem onSelect={() => handleTagSelect(null)}>
+              <BookOpen className="mr-2 h-4 w-4" />
+              <span>All Books</span>
+              {!selectedTag && (
+                <span className="ml-auto text-xs text-blue-500">Active</span>
+              )}
+            </CommandItem>
+            {tags.map((tag) => (
+              <CommandItem
+                key={tag.value}
+                value={tag.value}
+                onSelect={() => handleTagSelect(tag.value)}
+              >
+                <Tags className="mr-2 h-4 w-4" />
+                <span>{tag.value}</span>
+                {tag.count && (
+                  <span className="ml-2 text-xs text-gray-400">
+                    ({tag.count})
+                  </span>
+                )}
+                {selectedTag === tag.value && (
+                  <span className="ml-auto text-xs text-blue-500">Active</span>
+                )}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
+      </CommandDialog>
     </div>
   );
 }
