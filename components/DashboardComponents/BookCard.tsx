@@ -89,11 +89,11 @@ export default function BookCard({
               Tags
             </h4>
             <div className="flex flex-wrap gap-2">
-              {book.tags.map((tag) => {
+              {book.tags.map((tag, index) => {
                 const Icon = resolveTagIcon(tag.id);
                 return (
                   <span
-                    key={tag.id}
+                    key={`${tag.id}-${index}`}
                     className="inline-flex items-center gap-1 px-3 py-1 bg-neutral-100 dark:bg-neutral-800 rounded-full text-sm"
                   >
                     <Icon className="w-4 h-4" />
