@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.goodreads.com",
       },
+      {
+        protocol: "https",
+        hostname: "images.gr-assets.com",
+      },
     ],
   },
 };
