@@ -34,7 +34,7 @@ export default function Header() {
               <NavigationMenuContent>
                 <ul className=" gap-4">
                   <li>
-                    <NavigationMenuLink render={<Link href="#" />}>
+                    <NavigationMenuLink render={<Link href="/books" />}>
                       <div className="font-medium">Books</div>
                       <div className="text-muted-foreground">
                         Browse all books in the library.

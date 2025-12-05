@@ -28,7 +28,6 @@ export default function BookCardList({
 
   return (
     <div className="mt-20">
-      <h2 className="text-2xl font-bold mb-6 px-4">Recommended Books</h2>
       <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-3">
         {books.map((book, index) => (
           <BookCard
