@@ -1,7 +1,8 @@
 "use server";
 
-import { getBooks, getTags, getBookCount } from "@/lib/mongodb.cjs";
+import { getBooks, getTags, getBookCount } from "@/lib/db/books";
 import { getCount, setCount, invalidateCount } from "@/lib/bookCountCache";
+import type { Book } from "@/lib/types";
 
 export interface TagWithCount {
   id: string;
@@ -11,7 +12,7 @@ export interface TagWithCount {
 }
 
 export interface FetchBooksAndTagsResult {
-  books: ReturnType<typeof getBooks> extends Promise<infer T> ? T : never;
+  books: Book[];
   tags: TagWithCount[];
   totalCount: number;
   currentPage: number;
