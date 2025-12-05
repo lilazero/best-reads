@@ -52,7 +52,7 @@ export default function TagFilter({ tags }: TagFilterProps) {
   };
 
   return (
-    <div className="w-full max-w-6xl px-4 mb-8">
+    <div className="w-full max-w-6xl px-4 mb-1">
       {/* Trigger button and hint */}
       <div className="flex flex-col items-center gap-3">
         <button
@@ -69,13 +69,13 @@ export default function TagFilter({ tags }: TagFilterProps) {
               "Browse by Genre"
             )}
           </span>
-          <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
-            <span className="text-xs">⌘</span>J
+          <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1 font-mono text-[10px] font-medium text-muted-foreground">
+            <span className="text-[10px]">⌘</span>J
           </kbd>
         </button>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-gray-500 dark:text-gray-400">
           Click or press{" "}
-          <kbd className="px-1.5 py-0.5 text-xs bg-gray-200 dark:bg-gray-700 rounded">
+          <kbd className="px-1 py-0.5 text-[10px] bg-gray-200 dark:bg-gray-700 rounded">
             Ctrl+J
           </kbd>{" "}
           to browse by genre

@@ -154,16 +154,15 @@ export default function BooksPage({ searchParams }: BooksPageProps) {
   };
 
   return (
-    <div className="flex items-center flex-col min-h-screen mt-10 font-sans dark:bg-black">
-      <SearchBar />
-      <h2 className="text-2xl font-bold mb-6 mt-20 px-4">Books List</h2>
+    <div className="flex items-center flex-col min-h-screen mt-3 font-sans dark:bg-black">
+      <h2 className="text-2xl font-bold mb-3 mt-3 px-4">All Books</h2>
       {error && <p className="text-red-500">{error}</p>}
       <TagFilter tags={tags} />
 
       {/* Book count display with refresh button */}
       {totalCount > 0 && (
-        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-4">
-          <span>
+        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 ">
+          <span className="text-[10px]">
             Showing {startItem}-{endItem} of {totalCount} books
           </span>
           <button
@@ -173,7 +172,7 @@ export default function BooksPage({ searchParams }: BooksPageProps) {
             title="Refresh book count"
           >
             <RefreshCw
-              className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`}
+              className={`w-2 h-2 ${isRefreshing ? "animate-spin" : ""}`}
             />
           </button>
         </div>

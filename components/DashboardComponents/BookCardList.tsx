@@ -27,7 +27,7 @@ export default function BookCardList({
   }, [activeCardId]);
 
   return (
-    <div className="mt-20">
+    <div className="mt-3">
       <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-3">
         {books.map((book, index) => (
           <BookCard
