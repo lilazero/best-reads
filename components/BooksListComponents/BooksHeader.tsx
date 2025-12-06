@@ -100,22 +100,30 @@ export default function BooksHeader({
             </Tooltip>
           </TooltipProvider>
         )}
-        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 min-w-fit">
+        <div className="flex flex-col items-end gap-1 text-gray-600 dark:text-gray-400 min-w-fit">
           {totalCount > 0 && (
             <>
-              <span className="text-sm">
-                Showing {startItem}-{endItem} of {totalCount} books
-              </span>
-              <button
-                onClick={onRefresh}
-                disabled={isRefreshing}
-                className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors disabled:opacity-50"
-                title="Refresh book count"
-              >
-                <RefreshCw
-                  className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`}
-                />
-              </button>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px]">
+                  Showing {startItem}-{endItem} of {totalCount} books for this
+                  tag
+                </span>
+                <button
+                  onClick={onRefresh}
+                  disabled={isRefreshing}
+                  className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors disabled:opacity-50"
+                  title="Refresh book count"
+                >
+                  <RefreshCw
+                    className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`}
+                  />
+                </button>
+              </div>
+              {searchQuery.trim() && (
+                <span className="text-xs text-muted-foreground">
+                  Search filters the visible list; the total stays tag-based.
+                </span>
+              )}
             </>
           )}
         </div>

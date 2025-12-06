@@ -149,14 +149,10 @@ export default function SearchAndTagFilter({
   };
 
   const handleSelect = (value: string) => {
-    const isGenreValue = value.startsWith("[Genre] ");
-    const selectedTagValue = isGenreValue
-      ? value.replace("[Genre] ", "")
-      : null;
-    const item = searchItems.find((i) => i.value === value);
+    const item = searchItems.find((i) => i.id === value);
 
     // If this event is just typing (no matching item/genre), sync state and skip selection logic.
-    if (!isGenreValue && !item) {
+    if (!item) {
       setSearchQuery(value);
       return;
     }
@@ -165,12 +161,12 @@ export default function SearchAndTagFilter({
     setSearchQuery("");
     setDebouncedQuery("");
 
-    if (isGenreValue && selectedTagValue) {
-      handleTagSelect(selectedTagValue);
+    if (item.type === "tag") {
+      handleTagSelect(item.value.replace("[Genre] ", ""));
       return;
     }
 
-    if (item && item.type === "book" && item.bookId) {
+    if (item.type === "book" && item.bookId) {
       handleBookSelect(item.bookId);
     }
   };
@@ -212,7 +208,7 @@ export default function SearchAndTagFilter({
                         <AutocompleteEmpty>No results found.</AutocompleteEmpty>
                         <AutocompleteList>
                           {(item: SearchItem) => (
-                            <AutocompleteItem key={item.id} value={item.value}>
+                            <AutocompleteItem key={item.id} value={item.id}>
                               <div className="flex items-center gap-2">
                                 {item.type === "tag" ? (
                                   <Tags className="h-4 w-4 text-muted-foreground" />
