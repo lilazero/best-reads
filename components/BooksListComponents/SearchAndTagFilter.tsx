@@ -118,12 +118,22 @@ export default function SearchAndTagFilter({
     );
   }, [searchItems, debouncedQuery]);
 
-  // Keyboard shortcut: Ctrl+J or Cmd+J to open command dialog
+  // Keyboard shortcuts: Ctrl/Cmd+J opens dialog, Ctrl/Cmd+K focuses search
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "j" && (e.metaKey || e.ctrlKey)) {
+      const isModifier = e.metaKey || e.ctrlKey;
+      if (isModifier && e.key.toLowerCase() === "j") {
         e.preventDefault();
         setOpen((open) => !open);
+      }
+      if (isModifier && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        const input = document.getElementById(
+          "unified-search"
+        ) as HTMLInputElement | null;
+        input?.focus();
+        input?.select();
+        setOpen(false);
       }
     };
 
@@ -185,24 +195,29 @@ export default function SearchAndTagFilter({
                     autoHighlight
                     onValueChange={handleSelect}
                   >
-                    <AutocompleteInput
-                      id="unified-search"
-                      placeholder="Search books or genres..."
-                      className="bg-white dark:bg-gray-900 rounded-full"
-                      value={searchQuery}
-                      onInput={(e) => {
-                        const value = (e.target as HTMLInputElement).value;
-                        setSearchQuery(value);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && !searchQuery.trim()) {
-                          e.preventDefault();
-                          setSearchQuery("");
-                          setDebouncedQuery("");
-                          router.push("/books");
-                        }
-                      }}
-                    />
+                    <div className="relative">
+                      <AutocompleteInput
+                        id="unified-search"
+                        placeholder="Search books or genres..."
+                        className="bg-white dark:bg-gray-900 rounded-full pr-16"
+                        value={searchQuery}
+                        onInput={(e) => {
+                          const value = (e.target as HTMLInputElement).value;
+                          setSearchQuery(value);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && !searchQuery.trim()) {
+                            e.preventDefault();
+                            setSearchQuery("");
+                            setDebouncedQuery("");
+                            router.push("/books");
+                          }
+                        }}
+                      />
+                      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground border border-muted-foreground/40 rounded px-1">
+                        Ctrl+K
+                      </span>
+                    </div>
                     <AutocompletePositioner sideOffset={6}>
                       <AutocompletePopup>
                         <AutocompleteEmpty>No results found.</AutocompleteEmpty>
@@ -237,7 +252,10 @@ export default function SearchAndTagFilter({
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Press Ctrl+J for quick genre selection</p>
+                <p>
+                  Press Ctrl+J for quick genre selection · Ctrl+K to focus
+                  search
+                </p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
