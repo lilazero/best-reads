@@ -42,19 +42,11 @@ export default function BooksPage() {
 
   // Search query comes from URL (?q=), keeps behavior consistent with tag filtering
   const searchQuery = currentSearchParams.get("q") || "";
-  const [searchInput, setSearchInput] = useState(searchQuery);
-
-  // Keep local search input synced with URL changes (e.g., back/forward nav)
-  useEffect(() => {
-    setSearchInput(searchQuery);
-  }, [searchQuery]);
-
-  const activeSearchQuery = searchInput || "";
 
   // Filter books based on search query (same logic as dropdown)
-  const filteredBooks = activeSearchQuery.trim()
+  const filteredBooks = searchQuery.trim()
     ? books.filter((book) => {
-        const query = activeSearchQuery.toLowerCase();
+        const query = searchQuery.toLowerCase();
         return (
           book.title.toLowerCase().includes(query) ||
           (book.description &&
@@ -197,7 +189,6 @@ export default function BooksPage() {
             tags={tags}
             books={books}
             initialQuery={searchQuery}
-            onSearchChange={setSearchInput}
           />
         </div>
 

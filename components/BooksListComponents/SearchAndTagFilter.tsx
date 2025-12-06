@@ -46,13 +46,11 @@ interface TagFilterProps {
   tags: Tag[];
   books: BookType[];
   initialQuery?: string;
-  onSearchChange?: (value: string) => void;
 }
 export default function SearchAndTagFilter({
   tags,
   books,
   initialQuery = "",
-  onSearchChange,
 }: TagFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -78,8 +76,6 @@ export default function SearchAndTagFilter({
 
   // Update URL query (?q=) to drive BooksPage filtering via searchParams
   useEffect(() => {
-    onSearchChange?.(debouncedQuery);
-
     const currentQ = searchParams.get("q") || "";
     const nextQ = debouncedQuery.trim();
     if (currentQ === nextQ) return;
@@ -94,7 +90,7 @@ export default function SearchAndTagFilter({
     }
     const qs = params.toString();
     router.replace(`/books${qs ? `?${qs}` : ""}`);
-  }, [debouncedQuery, searchParams, router, onSearchChange]);
+  }, [debouncedQuery, searchParams, router]);
   // Combine tags and books into search items
   const searchItems: SearchItem[] = useMemo(() => {
     const tagItems: SearchItem[] = tags.map((tag) => ({
@@ -139,7 +135,6 @@ export default function SearchAndTagFilter({
     setOpen(false);
     setSearchQuery("");
     setDebouncedQuery("");
-    onSearchChange?.("");
     if (tagValue === null) {
       router.push("/books");
     } else {
@@ -169,7 +164,6 @@ export default function SearchAndTagFilter({
     // Clear on confirmed selection
     setSearchQuery("");
     setDebouncedQuery("");
-    onSearchChange?.("");
 
     if (isGenreValue && selectedTagValue) {
       handleTagSelect(selectedTagValue);
