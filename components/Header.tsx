@@ -3,6 +3,14 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 /* eslint-disable @next/next/no-img-element */
 import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 import {
   NavigationMenu,
@@ -13,12 +21,11 @@ import {
   NavigationMenuPopup,
   NavigationMenuPositioner,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 
 export default function Header() {
   return (
-    <header className="pl-10 flex items-center justify-between bg-background/50 pt-4 backdrop-blur-sm">
+    <header className="flex items-center justify-between pt-2  bg-background/50 backdrop-blur-sm">
       {/* Logo */}
       <Link href="/">
         <img src="/logo.png" alt="Logo" width={100} height={50} />
@@ -35,7 +42,7 @@ export default function Header() {
             <NavigationMenuItem>
               <NavigationMenuTrigger>Browse</NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className=" gap-4">
+                <ul className="gap-4 ">
                   <li>
                     <NavigationMenuLink render={<Link href="/books" />}>
                       <div className="font-medium">Books</div>
@@ -71,18 +78,54 @@ export default function Header() {
           </NavigationMenuPositioner>
         </NavigationMenu>
         {/* User Avatar */}
-        <div className="bg-linear-to-b h-fit from-red-500 to-blue-500 rounded-full p-1">
-          <Avatar className="size-10 ring-2 ring-background">
-            <AvatarImage
-              src="https://www.europaforum.at/wp2019/wp-content/uploads/2022/06/edi_rama_portret.jpg"
-              alt="@evilrabbit"
-              width="40"
-              height="40"
-              className="object-cover "
-            />
-            <AvatarFallback>User</AvatarFallback>
-          </Avatar>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className="p-1 transition rounded-full outline-none bg-linear-to-b h-fit from-red-500 to-blue-500 hover:brightness-105 focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="Open user menu"
+              type="button"
+            >
+              <Avatar className="size-10 ring-2 ring-background">
+                <AvatarImage
+                  src="https://www.europaforum.at/wp2019/wp-content/uploads/2022/06/edi_rama_portret.jpg"
+                  alt="@evilrabbit"
+                  width="40"
+                  height="40"
+                  className="object-cover"
+                />
+                <AvatarFallback>AR</AvatarFallback>
+              </Avatar>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-64">
+            <DropdownMenuLabel>
+              <div className="flex items-center gap-3">
+                <Avatar className="size-10">
+                  <AvatarImage
+                    src="https://www.europaforum.at/wp2019/wp-content/uploads/2022/06/edi_rama_portret.jpg"
+                    alt="@evilrabbit"
+                  />
+                  <AvatarFallback>AR</AvatarFallback>
+                </Avatar>
+                <div className="space-y-0.5">
+                  <p className="text-sm font-semibold">Alex Reader</p>
+                  <p className="text-xs text-muted-foreground">
+                    alex.reader@example.com
+                  </p>
+                </div>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>placeholder #1</DropdownMenuItem>
+            <DropdownMenuItem>placeholder #2</DropdownMenuItem>
+            <DropdownMenuItem>placeholder #3</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>placeholder Settings</DropdownMenuItem>
+            <DropdownMenuItem variant="destructive">
+              placeholder Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
