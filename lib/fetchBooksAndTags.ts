@@ -2,6 +2,7 @@
 
 import { getBooks, getTags, getBookCount } from "@/lib/db/books";
 import { getCount, setCount, invalidateCount } from "@/lib/bookCountCache";
+import { BOOKS_PER_PAGE } from "@/lib/constants";
 import type { Book } from "@/lib/types";
 
 export interface TagWithCount {
@@ -19,8 +20,6 @@ export interface FetchBooksAndTagsResult {
   totalPages: number;
   error: string | null;
 }
-
-const BOOKS_PER_PAGE = 30;
 
 /**
  * Fetches books and tags from MongoDB with pagination support.

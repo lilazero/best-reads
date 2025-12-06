@@ -45,24 +45,56 @@ interface SearchItem {
 interface TagFilterProps {
   tags: Tag[];
   books: BookType[];
+  initialQuery?: string;
+  onSearchChange?: (value: string) => void;
 }
-export default function SearchAndTagFilter({ tags, books }: TagFilterProps) {
+export default function SearchAndTagFilter({
+  tags,
+  books,
+  initialQuery = "",
+  onSearchChange,
+}: TagFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedTag = searchParams.get("tag");
   const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [debouncedQuery, setDebouncedQuery] = useState(initialQuery);
 
-  // Debounce search query with 2 second delay
+  // Keep local state in sync with URL (e.g., back/forward nav)
+  useEffect(() => {
+    setSearchQuery(initialQuery);
+    setDebouncedQuery(initialQuery);
+  }, [initialQuery]);
+
+  // Debounce search changes to avoid spamming URL/parent updates
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(searchQuery);
-    }, 2000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
+  // Update URL query (?q=) to drive BooksPage filtering via searchParams
+  useEffect(() => {
+    onSearchChange?.(debouncedQuery);
+
+    const currentQ = searchParams.get("q") || "";
+    const nextQ = debouncedQuery.trim();
+    if (currentQ === nextQ) return;
+
+    const params = new URLSearchParams(searchParams.toString());
+    if (nextQ) {
+      params.set("q", nextQ);
+      params.delete("page"); // reset pagination on new search
+    } else {
+      params.delete("q");
+      params.delete("page");
+    }
+    const qs = params.toString();
+    router.replace(`/books${qs ? `?${qs}` : ""}`);
+  }, [debouncedQuery, searchParams, router, onSearchChange]);
   // Combine tags and books into search items
   const searchItems: SearchItem[] = useMemo(() => {
     const tagItems: SearchItem[] = tags.map((tag) => ({
@@ -105,6 +137,9 @@ export default function SearchAndTagFilter({ tags, books }: TagFilterProps) {
 
   const handleTagSelect = (tagValue: string | null) => {
     setOpen(false);
+    setSearchQuery("");
+    setDebouncedQuery("");
+    onSearchChange?.("");
     if (tagValue === null) {
       router.push("/books");
     } else {
@@ -119,18 +154,28 @@ export default function SearchAndTagFilter({ tags, books }: TagFilterProps) {
   };
 
   const handleSelect = (value: string) => {
-    // Clear search query on selection
-    setSearchQuery("");
-    setDebouncedQuery("");
+    const isGenreValue = value.startsWith("[Genre] ");
+    const selectedTagValue = isGenreValue
+      ? value.replace("[Genre] ", "")
+      : null;
+    const item = searchItems.find((i) => i.value === value);
 
-    // Check if it's a genre selection
-    if (value.startsWith("[Genre] ")) {
-      const tagValue = value.replace("[Genre] ", "");
-      handleTagSelect(tagValue);
+    // If this event is just typing (no matching item/genre), sync state and skip selection logic.
+    if (!isGenreValue && !item) {
+      setSearchQuery(value);
       return;
     }
-    // Otherwise it's a book
-    const item = searchItems.find((i) => i.value === value);
+
+    // Clear on confirmed selection
+    setSearchQuery("");
+    setDebouncedQuery("");
+    onSearchChange?.("");
+
+    if (isGenreValue && selectedTagValue) {
+      handleTagSelect(selectedTagValue);
+      return;
+    }
+
     if (item && item.type === "book" && item.bookId) {
       handleBookSelect(item.bookId);
     }
@@ -154,9 +199,11 @@ export default function SearchAndTagFilter({ tags, books }: TagFilterProps) {
                       id="unified-search"
                       placeholder="Search books or genres..."
                       className="bg-white dark:bg-gray-900 rounded-full"
-                      onInput={(e) =>
-                        setSearchQuery((e.target as HTMLInputElement).value)
-                      }
+                      value={searchQuery}
+                      onInput={(e) => {
+                        const value = (e.target as HTMLInputElement).value;
+                        setSearchQuery(value);
+                      }}
                     />
                     <AutocompletePositioner sideOffset={6}>
                       <AutocompletePopup>

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { fetchBooksAndTags, refreshBookCount } from "@/lib/fetchBooksAndTags";
+import { BOOKS_PER_PAGE } from "@/lib/constants";
 import BookCardList from "@/components/DashboardComponents/BookCardList";
 import SearchAndTagFilter from "@/components/BooksListComponents/SearchAndTagFilter";
 import {
@@ -24,6 +25,7 @@ import { RefreshCw, Tags } from "lucide-react";
 
 export default function BooksPage() {
   const currentSearchParams = useSearchParams();
+  const router = useRouter();
   const selectedTag = currentSearchParams.get("tag");
 
   const [error, setError] = useState<string | null>(null);
@@ -38,12 +40,37 @@ export default function BooksPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  // Search query comes from URL (?q=), keeps behavior consistent with tag filtering
+  const searchQuery = currentSearchParams.get("q") || "";
+  const [searchInput, setSearchInput] = useState(searchQuery);
+
+  // Keep local search input synced with URL changes (e.g., back/forward nav)
+  useEffect(() => {
+    setSearchInput(searchQuery);
+  }, [searchQuery]);
+
+  const activeSearchQuery = searchInput || "";
+
+  // Filter books based on search query (same logic as dropdown)
+  const filteredBooks = activeSearchQuery.trim()
+    ? books.filter((book) => {
+        const query = activeSearchQuery.toLowerCase();
+        return (
+          book.title.toLowerCase().includes(query) ||
+          (book.description &&
+            book.description.toLowerCase().includes(query)) ||
+          (book.longDescription &&
+            book.longDescription.toLowerCase().includes(query))
+        );
+      })
+    : books;
+
+  const selectedTagParam = currentSearchParams.get("tag") || undefined;
+  const pageParam = parseInt(currentSearchParams.get("page") || "1", 10);
+
   useEffect(() => {
     const loadData = async () => {
-      const selectedTag = currentSearchParams.get("tag") || undefined;
-      const page = parseInt(currentSearchParams.get("page") || "1", 10);
-
-      const result = await fetchBooksAndTags(selectedTag, page);
+      const result = await fetchBooksAndTags(selectedTagParam, pageParam);
       setBooks(result.books);
       setTags(result.tags);
       setTotalCount(result.totalCount);
@@ -53,7 +80,7 @@ export default function BooksPage() {
     };
 
     loadData();
-  }, [currentSearchParams]);
+  }, [selectedTagParam, pageParam]);
 
   const handleRefreshCount = async () => {
     setIsRefreshing(true);
@@ -62,23 +89,25 @@ export default function BooksPage() {
 
     if (!result.error) {
       setTotalCount(result.count);
-      setTotalPages(Math.ceil(result.count / 30));
+      setTotalPages(Math.ceil(result.count / BOOKS_PER_PAGE));
     }
     setIsRefreshing(false);
   };
 
   const buildPageUrl = (page: number) => {
     const tag = currentSearchParams.get("tag");
+    const query = currentSearchParams.get("q");
     const params = new URLSearchParams();
     if (tag) params.set("tag", tag);
+    if (query) params.set("q", query);
     if (page > 1) params.set("page", page.toString());
     const queryString = params.toString();
     return `/books${queryString ? `?${queryString}` : ""}`;
   };
 
   // Calculate displayed range
-  const startItem = (currentPage - 1) * 30 + 1;
-  const endItem = Math.min(currentPage * 30, totalCount);
+  const startItem = (currentPage - 1) * BOOKS_PER_PAGE + 1;
+  const endItem = Math.min(currentPage * BOOKS_PER_PAGE, totalCount);
 
   // Generate pagination items
   const renderPaginationItems = () => {
@@ -164,7 +193,12 @@ export default function BooksPage() {
 
         {/* Search bar in center */}
         <div className="flex-1 flex justify-center">
-          <SearchAndTagFilter tags={tags} books={books} />
+          <SearchAndTagFilter
+            tags={tags}
+            books={books}
+            initialQuery={searchQuery}
+            onSearchChange={setSearchInput}
+          />
         </div>
 
         {/* Filter indicator on right */}
@@ -181,10 +215,7 @@ export default function BooksPage() {
                     </span>
                     <button
                       onClick={() => {
-                        const params = new URLSearchParams();
-                        window.location.href = `/books${
-                          params.toString() ? `?${params}` : ""
-                        }`;
+                        router.push("/books");
                       }}
                       className="ml-1 text-xs underline hover:text-foreground"
                     >
@@ -226,9 +257,11 @@ export default function BooksPage() {
 
       {books.length === 0 ? (
         <p className="text-gray-500 mt-8">No books found with this tag.</p>
+      ) : filteredBooks.length === 0 ? (
+        <p className="text-gray-500 mt-8">No books match your search.</p>
       ) : (
         <>
-          <BookCardList books={books} showBuyButton={false} />
+          <BookCardList books={filteredBooks} showBuyButton={false} />
 
           {/* Pagination */}
           {totalPages > 1 && (
