@@ -198,6 +198,14 @@ export default function SearchAndTagFilter({
                         const value = (e.target as HTMLInputElement).value;
                         setSearchQuery(value);
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !searchQuery.trim()) {
+                          e.preventDefault();
+                          setSearchQuery("");
+                          setDebouncedQuery("");
+                          router.push("/books");
+                        }
+                      }}
                     />
                     <AutocompletePositioner sideOffset={6}>
                       <AutocompletePopup>

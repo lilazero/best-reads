@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import SearchAndTagFilter from "./SearchAndTagFilter";
 import {
   Tooltip,
@@ -38,6 +39,19 @@ export default function BooksHeader({
   onRefresh,
   onClearTag,
 }: BooksHeaderProps) {
+  const [tipOpen, setTipOpen] = useState(false);
+
+  // Briefly show hint after a search term is entered
+  useEffect(() => {
+    if (!searchQuery.trim()) return;
+    const openTimer = setTimeout(() => setTipOpen(true), 0);
+    const closeTimer = setTimeout(() => setTipOpen(false), 1000);
+    return () => {
+      clearTimeout(openTimer);
+      clearTimeout(closeTimer);
+    };
+  }, [searchQuery]);
+
   return (
     <div className="w-full max-w-6xl px-4 mb-3 flex items-center justify-between gap-4">
       <h2 className="text-2xl font-bold ">{title}</h2>
@@ -65,7 +79,16 @@ export default function BooksHeader({
                     onClick={onClearTag}
                     className="ml-1 text-xs underline hover:text-foreground"
                   >
-                    ✕
+                    <Tooltip open={tipOpen} onOpenChange={setTipOpen}>
+                      <TooltipTrigger asChild>
+                        <span className="inline-flex items-center justify-center">
+                          ✕
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        Press Enter on an empty search to reset
+                      </TooltipContent>
+                    </Tooltip>
                   </button>
                 </div>
               </TooltipTrigger>
