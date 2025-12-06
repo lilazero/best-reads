@@ -19,7 +19,10 @@ import {
 export default function Header() {
   return (
     <header className="pl-10 flex items-center justify-between bg-background/50 pt-4 backdrop-blur-sm">
-      <img src="/logo.png" alt="Logo" width={100} height={50} />
+      {/* Logo */}
+      <Link href="/">
+        <img src="/logo.png" alt="Logo" width={100} height={50} />
+      </Link>
       {/* Header nav Links area */}
       <div className="flex">
         <NavigationMenu>
