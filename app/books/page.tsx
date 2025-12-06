@@ -11,7 +11,6 @@ import BooksPagination from "@/components/BooksListComponents/BooksPagination";
 export default function BooksPage() {
   const currentSearchParams = useSearchParams();
   const router = useRouter();
-  const selectedTag = currentSearchParams.get("tag");
 
   const [error, setError] = useState<string | null>(null);
   const [books, setBooks] = useState<
@@ -30,7 +29,7 @@ export default function BooksPage() {
 
   // Filter books based on search query (same logic as dropdown)
   const filteredBooks = searchQuery.trim()
-    ? books.filter((book) => {
+    ? books.filter((book: (typeof books)[0]) => {
         const query = searchQuery.toLowerCase();
         return (
           book.title.toLowerCase().includes(query) ||
@@ -42,12 +41,12 @@ export default function BooksPage() {
       })
     : books;
 
-  const selectedTagParam = currentSearchParams.get("tag") || undefined;
+  const selectedTag = currentSearchParams.get("tag") || undefined;
   const pageParam = parseInt(currentSearchParams.get("page") || "1", 10);
 
   useEffect(() => {
     const loadData = async () => {
-      const result = await fetchBooksAndTags(selectedTagParam, pageParam);
+      const result = await fetchBooksAndTags(selectedTag, pageParam);
       setBooks(result.books);
       setTags(result.tags);
       setTotalCount(result.totalCount);
@@ -57,7 +56,7 @@ export default function BooksPage() {
     };
 
     loadData();
-  }, [selectedTagParam, pageParam]);
+  }, [selectedTag, pageParam]);
 
   const handleRefreshCount = async () => {
     setIsRefreshing(true);
@@ -101,6 +100,7 @@ export default function BooksPage() {
         isRefreshing={isRefreshing}
         onRefresh={handleRefreshCount}
         onClearTag={() => router.push("/books")}
+        basePath="/books"
       />
 
       {books.length === 0 ? (

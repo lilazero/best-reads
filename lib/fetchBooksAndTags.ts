@@ -57,7 +57,7 @@ export async function fetchBooksAndTags(
 
     return {
       books,
-      tags,
+      tags: tags as TagWithCount[],
       totalCount: totalCount || 0,
       currentPage: page,
       totalPages,

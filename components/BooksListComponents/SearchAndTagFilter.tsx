@@ -46,11 +46,13 @@ interface TagFilterProps {
   tags: Tag[];
   books: BookType[];
   initialQuery?: string;
+  basePath?: string;
 }
 export default function SearchAndTagFilter({
   tags,
   books,
   initialQuery = "",
+  basePath = "/books",
 }: TagFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -89,8 +91,8 @@ export default function SearchAndTagFilter({
       params.delete("page");
     }
     const qs = params.toString();
-    router.replace(`/books${qs ? `?${qs}` : ""}`);
-  }, [debouncedQuery, searchParams, router]);
+    router.replace(`${basePath}${qs ? `?${qs}` : ""}`);
+  }, [debouncedQuery, searchParams, router, basePath]);
   // Combine tags and books into search items
   const searchItems: SearchItem[] = useMemo(() => {
     const tagItems: SearchItem[] = tags.map((tag) => ({
@@ -146,15 +148,15 @@ export default function SearchAndTagFilter({
     setSearchQuery("");
     setDebouncedQuery("");
     if (tagValue === null) {
-      router.push("/books");
+      router.push(basePath);
     } else {
-      router.push(`/books?tag=${encodeURIComponent(tagValue)}`);
+      router.push(`${basePath}?tag=${encodeURIComponent(tagValue)}`);
     }
   };
 
   const handleBookSelect = (bookId: string) => {
     setOpen(false);
-    // Navigate to book detail page (adjust path as needed)
+    // Navigate to book detail page; books are always under /books regardless of basePath
     router.push(`/books/${bookId}`);
   };
 
@@ -206,11 +208,17 @@ export default function SearchAndTagFilter({
                           setSearchQuery(value);
                         }}
                         onKeyDown={(e) => {
-                          if (e.key === "Enter" && !searchQuery.trim()) {
+                          if (e.key === "Escape") {
                             e.preventDefault();
                             setSearchQuery("");
                             setDebouncedQuery("");
-                            router.push("/books");
+                            const params = new URLSearchParams(
+                              searchParams.toString()
+                            );
+                            params.delete("q");
+                            params.delete("tag");
+                            params.delete("page");
+                            router.push(basePath);
                           }
                         }}
                       />
@@ -253,8 +261,7 @@ export default function SearchAndTagFilter({
               </TooltipTrigger>
               <TooltipContent>
                 <p>
-                  Press Ctrl+J for quick genre selection · Ctrl+K to focus
-                  search
+                  Escape to clear filters · Ctrl+J for tags · Ctrl+K to focus
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -277,7 +284,7 @@ export default function SearchAndTagFilter({
             </CommandItem>
             {tags.map((tag) => (
               <CommandItem
-                key={tag.value}
+                key={tag.id}
                 value={tag.value}
                 onSelect={() => handleTagSelect(tag.value)}
               >

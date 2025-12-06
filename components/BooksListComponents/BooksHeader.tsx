@@ -24,6 +24,7 @@ interface BooksHeaderProps {
   isRefreshing: boolean;
   onRefresh: () => void;
   onClearTag: () => void;
+  basePath: string;
 }
 
 export default function BooksHeader({
@@ -38,6 +39,7 @@ export default function BooksHeader({
   isRefreshing,
   onRefresh,
   onClearTag,
+  basePath,
 }: BooksHeaderProps) {
   const [tipOpen, setTipOpen] = useState(false);
 
@@ -61,6 +63,7 @@ export default function BooksHeader({
           tags={tags}
           books={books}
           initialQuery={searchQuery}
+          basePath={basePath}
         />
       </div>
 
@@ -86,7 +89,7 @@ export default function BooksHeader({
                         </span>
                       </TooltipTrigger>
                       <TooltipContent>
-                        Press Enter on an empty search to reset
+                        Press Escape to clear all filters
                       </TooltipContent>
                     </Tooltip>
                   </button>
