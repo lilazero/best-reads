@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 /* eslint-disable @next/next/no-img-element */
 import { Button } from "./ui/button";
+import ThemeChangeButton from "./MultiUseComponents/ThemeChangeButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,14 +26,14 @@ import {
 
 export default function Header() {
   return (
-    <header className="flex items-center justify-between pt-2  bg-background/50 backdrop-blur-sm">
+    <header className="flex items-center justify-between pt-2  backdrop-blur-sm">
       {/* Logo */}
       <Link href="/">
         <img src="/logo.png" alt="Logo" width={100} height={50} />
       </Link>
       {/* Header nav Links area */}
       <div className="flex">
-        <NavigationMenu>
+        <NavigationMenu className="mr-4">
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuLink href="/">
@@ -81,7 +82,7 @@ export default function Header() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="p-1 transition rounded-full outline-none bg-linear-to-b h-fit from-red-500 to-blue-500 hover:brightness-105 focus-visible:ring-2 focus-visible:ring-ring"
+              className="p-1 transition rounded-full cursor-pointer outline-none bg-linear-to-b h-fit from-red-500 to-blue-500 hover:brightness-105 focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="Open user menu"
               type="button"
             >
@@ -120,6 +121,7 @@ export default function Header() {
             <DropdownMenuItem>placeholder #2</DropdownMenuItem>
             <DropdownMenuItem>placeholder #3</DropdownMenuItem>
             <DropdownMenuSeparator />
+            <ThemeChangeButton asDropdownItem />
             <DropdownMenuItem>placeholder Settings</DropdownMenuItem>
             <DropdownMenuItem variant="destructive">
               placeholder Log out
