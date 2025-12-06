@@ -25,7 +25,7 @@ import {
 
 export default function Header() {
   return (
-    <header className="flex items-center justify-between pt-2  bg-background/50 backdrop-blur-sm">
+    <header className="flex items-center justify-between pt-2  backdrop-blur-sm">
       {/* Logo */}
       <Link href="/">
         <img src="/logo.png" alt="Logo" width={100} height={50} />
