@@ -95,6 +95,7 @@ export default function BooksPage() {
         books={books}
         selectedTag={selectedTag}
         totalCount={totalCount}
+        filteredCount={searchQuery.trim() ? filteredBooks.length : undefined}
         startItem={startItem}
         endItem={endItem}
         isRefreshing={isRefreshing}
