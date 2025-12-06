@@ -38,14 +38,11 @@ export const getBooks = async (
  */
 export const getBookById = async (id: string): Promise<Book | null> => {
   const db = await getDb();
-  // Try to find by ObjectId first, then by string id field
-  let doc = null;
-  try {
-    doc = await db.collection("books").findOne({ _id: new ObjectId(id) });
-  } catch {
-    // If id is not a valid ObjectId, try finding by id field
-    doc = await db.collection("books").findOne({ id: id });
+  if (!ObjectId.isValid(id)) {
+    return null;
   }
+
+  const doc = await db.collection("books").findOne({ _id: new ObjectId(id) });
   if (!doc) return null;
   return normalizeDocument<Book>(doc as Record<string, unknown>);
 };
