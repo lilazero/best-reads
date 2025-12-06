@@ -59,26 +59,6 @@ export function invalidateAllCounts(): void {
 }
 
 /**
- * Get total count by summing all per-tag counts.
- * Returns null if no cached data available.
- */
-export function getTotalFromTagCounts(): number | null {
-  if (countCache.size === 0) return null;
-
-  let total = 0;
-  const now = Date.now();
-
-  for (const [tag, entry] of countCache.entries()) {
-    // Skip the "all" entry and expired entries
-    if (tag === "all") continue;
-    if (now - entry.timestamp > CACHE_TTL_MS) continue;
-    total += entry.count;
-  }
-
-  return total > 0 ? total : null;
-}
-
-/**
  * Get all cached entries (for debugging/monitoring).
  */
 export function getCacheStats(): {
