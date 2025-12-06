@@ -86,7 +86,7 @@ export default function BooksPage() {
   const endItem = Math.min(currentPage * BOOKS_PER_PAGE, totalCount);
 
   return (
-    <div className="flex items-center flex-col min-h-screen mt-3 font-sans dark:bg-black">
+    <div className="flex items-center flex-col min-h-screen mt-3 font-sans ">
       {error && <p className="text-red-500">{error}</p>}
 
       <BooksHeader

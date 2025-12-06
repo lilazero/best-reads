@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 /* eslint-disable @next/next/no-img-element */
 import { Button } from "./ui/button";
+import ThemeChangeButton from "./MultiUseComponents/ThemeChangeButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -120,7 +121,7 @@ export default function Header() {
             <DropdownMenuItem>placeholder #2</DropdownMenuItem>
             <DropdownMenuItem>placeholder #3</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>theme button placeholder</DropdownMenuItem>
+            <ThemeChangeButton asDropdownItem />
             <DropdownMenuItem>placeholder Settings</DropdownMenuItem>
             <DropdownMenuItem variant="destructive">
               placeholder Log out
