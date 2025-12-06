@@ -19,15 +19,16 @@ export default function BookCardList({
   const [activeCardId, setActiveCardId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (activeCardId) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = activeCardId ? "hidden" : "auto";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
   }, [activeCardId]);
 
   return (
-    <div className="mt-20">
+    <div className="mt-3">
       <div className="grid gap-1 md:grid-cols-2 xl:grid-cols-3">
         {books.map((book, index) => (
           <BookCard
