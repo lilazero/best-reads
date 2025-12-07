@@ -23,6 +23,7 @@ import {
   NavigationMenuPositioner,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import { SignInButton } from "@clerk/nextjs";
 
 export default function Header() {
   return (
@@ -31,6 +32,7 @@ export default function Header() {
       <Link href="/">
         <img src="/logo.png" alt="Logo" width={100} height={50} />
       </Link>
+
       {/* Header nav Links area */}
       <div className="flex">
         <NavigationMenu className="mr-4">

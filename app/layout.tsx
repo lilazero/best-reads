@@ -5,6 +5,14 @@ import Header from "@/components/Header";
 import Footer from "@/components/DashboardComponents/Footer";
 import Wrapper from "../components/ui/Wrapper";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,11 +46,13 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Wrapper>
-            <Header />
-            <div className="min-h-screen flex flex-col">
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
+            <ClerkProvider>
+              <Header />
+              <div className="min-h-screen flex flex-col">
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+            </ClerkProvider>
           </Wrapper>
         </ThemeProvider>
       </body>
