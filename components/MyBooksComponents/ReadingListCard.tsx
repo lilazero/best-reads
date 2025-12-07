@@ -34,8 +34,7 @@ export function ReadingListCard({ list }: ReadingListCardProps) {
             showBuyButton={false}
             useHorizontalScroll={true}
             hideAddToListButton={true}
-            cardWidth="w-48"
-            cardHeight="h-"
+            cardWidth="w-48 flex-shrink-0"
           />
         </div>
       ) : (
