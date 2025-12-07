@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Book } from "@/lib/types";
 import BookCard from "./BookCard";
 
@@ -11,6 +11,10 @@ interface BookCardListProps {
   hideAddToListButton?: boolean;
   cardWidth?: string;
   cardHeight?: string;
+  columnCount?: number;
+  previewImageFit?: "card" | "fixed";
+  previewImageHeight?: string;
+  previewImageWidth?: string;
 }
 /**
  * @props books - An array of Book objects to be displayed in the recommended book list.
@@ -27,17 +31,15 @@ export default function BookCardList({
   hideAddToListButton = false,
   cardWidth,
   cardHeight,
+  columnCount,
+  previewImageFit = "card",
+  previewImageHeight,
+  previewImageWidth,
 }: BookCardListProps) {
   const [activeCardId, setActiveCardId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = activeCardId ? "hidden" : "auto";
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [activeCardId]);
+  // Body scroll locking is handled by the card/modal itself via `useScrollLock`.
+  // This component only tracks which card is active and delegates the UI behavior.
 
   return (
     <div className="mt-3 ">
@@ -45,7 +47,24 @@ export default function BookCardList({
         className={
           useHorizontalScroll
             ? "flex gap-2 overflow-x-auto pb-2 scroll-smooth"
-            : "grid gap-1 md:grid-cols-2 xl:grid-cols-3"
+            : (() => {
+                // Map allowed column counts to explicit class strings so Tailwind
+                // can detect them at build time. We only allow 1..6 columns.
+                const count = Math.min(
+                  Math.max(Math.floor(columnCount || 3), 1),
+                  6
+                );
+                const colsMap: Record<number, string> = {
+                  1: "grid-cols-1 md:grid-cols-1 xl:grid-cols-1",
+                  2: "grid-cols-2 md:grid-cols-2 xl:grid-cols-2",
+                  3: "grid-cols-3 md:grid-cols-3 xl:grid-cols-3",
+                  4: "grid-cols-4 md:grid-cols-4 xl:grid-cols-4",
+                  5: "grid-cols-5 md:grid-cols-5 xl:grid-cols-5",
+                  6: "grid-cols-6 md:grid-cols-6 xl:grid-cols-6",
+                };
+
+                return `grid gap-1 ${colsMap[count]}`;
+              })()
         }
       >
         {books.map((book, index) => (
@@ -60,6 +79,9 @@ export default function BookCardList({
             hideAddToListButton={hideAddToListButton}
             customWidth={cardWidth}
             customHeight={cardHeight}
+            previewImageFit={previewImageFit}
+            previewImageHeight={previewImageHeight}
+            previewImageWidth={previewImageWidth}
           />
         ))}
       </div>

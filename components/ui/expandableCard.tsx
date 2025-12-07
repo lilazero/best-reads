@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useId, useRef } from "react";
+import React, { useCallback, useEffect, useId, useRef } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { useOutsideClick } from "@/hooks/use-outside-click";
+import useScrollLock from "@/hooks/use-scroll-lock";
 
 export interface ExpandableCardData {
   id: string;
@@ -28,6 +29,16 @@ interface ExpandableCardProps {
    * to the default base classes so server and client markup remain consistent.
    */
   cardClassName?: string;
+  /**
+   * How the collapsed preview image should fit the card.
+   * - 'card': image fills the card width (responsive)
+   * - 'fixed': fixed 180x240 canvas centered
+   */
+  previewImageFit?: "card" | "fixed";
+  /** Height for the preview image canvas (Tailwind class string). Defaults to 'h-60'. */
+  previewImageHeight?: string;
+  /** Width for the preview image canvas in 'fixed' mode (Tailwind class string). Defaults to 'w-[180px]'. */
+  previewImageWidth?: string;
 }
 
 export function ExpandableCard({
@@ -36,6 +47,9 @@ export function ExpandableCard({
   onActivate,
   onDeactivate,
   cardClassName,
+  previewImageFit = "card",
+  previewImageHeight = "h-60",
+  previewImageWidth = "w-[180px]",
 }: ExpandableCardProps) {
   const baseCardClass =
     " p-1 flex flex-col hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer";
@@ -43,7 +57,7 @@ export function ExpandableCard({
     ? `${baseCardClass} ${cardClassName}`
     : baseCardClass;
   const id = useId();
-  const ref = useRef<HTMLDivElement>(null!);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -56,11 +70,15 @@ export function ExpandableCard({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [isActive, onDeactivate]);
 
-  useOutsideClick(ref, () => {
+  const handleOutsideClick = useCallback(() => {
     if (isActive) {
       onDeactivate();
     }
-  });
+  }, [isActive, onDeactivate]);
+
+  useOutsideClick(ref, handleOutsideClick);
+  // Lock body scroll while the card is active (overlay open)
+  useScrollLock(isActive);
 
   return (
     <>
@@ -181,13 +199,31 @@ export function ExpandableCard({
         <div className="flex gap-4 flex-col w-full">
           {card.src && (
             <motion.div layoutId={`image-${card.id}-${id}`}>
-              <Image
-                width={400}
-                height={240}
-                src={card.src}
-                alt={card.title}
-                className="h-60 w-full rounded-lg object-cover object-top"
-              />
+              {previewImageFit === "card" ? (
+                <div
+                  className={`w-full rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 ${previewImageHeight}`}
+                >
+                  <Image
+                    width={400}
+                    height={240}
+                    src={card.src}
+                    alt={card.title}
+                    className="h-full w-full object-contain object-center"
+                  />
+                </div>
+              ) : (
+                <div
+                  className={`mx-auto rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 ${previewImageHeight} ${previewImageWidth}`}
+                >
+                  <Image
+                    width={400}
+                    height={240}
+                    src={card.src}
+                    alt={card.title}
+                    className="h-full w-full object-contain object-center"
+                  />
+                </div>
+              )}
             </motion.div>
           )}
           <div className="flex justify-center items-center flex-col w-full">

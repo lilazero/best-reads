@@ -110,7 +110,11 @@ export default function BooksPage() {
         <p className="text-gray-500 mt-8">No books match your search.</p>
       ) : (
         <>
-          <BookCardList books={filteredBooks} showBuyButton={false} />
+          <BookCardList
+            books={filteredBooks}
+            showBuyButton={false}
+            columnCount={6}
+          />
 
           {totalPages > 1 && (
             <div className="mt-8 mb-12">

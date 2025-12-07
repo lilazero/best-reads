@@ -58,7 +58,13 @@ export default function RecommendedBooksList({
             : "No books found."}
         </p>
       ) : (
-        <BookCardList books={filteredBooks} showBuyButton={false} />
+        <BookCardList
+          books={filteredBooks}
+          showBuyButton={false}
+          columnCount={4}
+          previewImageFit="card"
+          previewImageHeight={"h-92"}
+        />
       )}
     </>
   );

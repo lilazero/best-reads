@@ -41,6 +41,9 @@ interface BookCardProps {
   hideAddToListButton?: boolean;
   customWidth?: string;
   customHeight?: string;
+  previewImageFit?: "card" | "fixed";
+  previewImageHeight?: string;
+  previewImageWidth?: string;
 }
 
 export default function BookCard({
@@ -53,6 +56,9 @@ export default function BookCard({
   hideAddToListButton = false,
   customWidth,
   customHeight,
+  previewImageFit = "card",
+  previewImageHeight,
+  previewImageWidth,
 }: BookCardProps) {
   const { isSignedIn, isLoaded } = useUser();
   const [showAddToList, setShowAddToList] = useState(false);
@@ -158,6 +164,9 @@ export default function BookCard({
             ? `${customWidth || ""} ${customHeight || ""}`
             : undefined
         }
+        previewImageFit={previewImageFit}
+        previewImageHeight={previewImageHeight}
+        previewImageWidth={previewImageWidth}
       />
       <AddToListDialog
         open={showAddToList}
