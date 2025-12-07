@@ -1,25 +1,25 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 import React, { useEffect } from "react";
 
 export const useOutsideClick = (
-  ref: React.RefObject<HTMLDivElement>,
-  callback: Function
+  ref: React.RefObject<HTMLElement | null>,
+  callback: (event: Event) => void
 ) => {
   useEffect(() => {
-    const listener = (event: any) => {
+    const listener = (event: Event) => {
+      const target = event.target as Node | null;
       // DO NOTHING if the element being clicked is the target element or their children
-      if (!ref.current || ref.current.contains(event.target)) {
+      if (!ref.current || (target && ref.current.contains(target))) {
         return;
       }
       callback(event);
     };
 
-    document.addEventListener("mousedown", listener);
+    // Use pointerdown for broader device support and keep touchstart for older browsers
+    document.addEventListener("pointerdown", listener);
     document.addEventListener("touchstart", listener);
 
     return () => {
-      document.removeEventListener("mousedown", listener);
+      document.removeEventListener("pointerdown", listener);
       document.removeEventListener("touchstart", listener);
     };
   }, [ref, callback]);
