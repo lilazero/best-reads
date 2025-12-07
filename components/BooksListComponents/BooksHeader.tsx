@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import SearchAndTagFilter from "./SearchAndTagFilter";
+import SearchFilter from "./SearchFilter";
+import TagFilter from "./TagFilter";
 import {
   Tooltip,
   TooltipContent,
@@ -19,11 +20,13 @@ interface BooksHeaderProps {
   books: Book[];
   selectedTag?: string | null;
   totalCount: number;
+  filteredCount?: number;
   startItem: number;
   endItem: number;
   isRefreshing: boolean;
   onRefresh: () => void;
   onClearTag: () => void;
+  basePath: string;
 }
 
 export default function BooksHeader({
@@ -33,13 +36,18 @@ export default function BooksHeader({
   books,
   selectedTag,
   totalCount,
+  filteredCount,
   startItem,
   endItem,
   isRefreshing,
   onRefresh,
   onClearTag,
+  basePath,
 }: BooksHeaderProps) {
   const [tipOpen, setTipOpen] = useState(false);
+
+  // Use filteredCount if provided (for search results), otherwise use totalCount (for tag filtering)
+  const displayCount = filteredCount !== undefined ? filteredCount : totalCount;
 
   // Briefly show hint after a search term is entered
   useEffect(() => {
@@ -57,11 +65,14 @@ export default function BooksHeader({
       <h2 className="text-2xl font-bold ">{title}</h2>
 
       <div className="flex-1 flex justify-center">
-        <SearchAndTagFilter
-          tags={tags}
-          books={books}
-          initialQuery={searchQuery}
-        />
+        <div className="flex flex-row gap-2 items-center w-full justify-center">
+          <SearchFilter
+            books={books}
+            initialQuery={searchQuery}
+            basePath={basePath}
+          />
+          <TagFilter tags={tags} basePath={basePath} />
+        </div>
       </div>
 
       <div className="min-w-fit flex-col">
@@ -86,7 +97,7 @@ export default function BooksHeader({
                         </span>
                       </TooltipTrigger>
                       <TooltipContent>
-                        Press Enter on an empty search to reset
+                        Press Escape to clear all filters
                       </TooltipContent>
                     </Tooltip>
                   </button>
@@ -105,8 +116,27 @@ export default function BooksHeader({
             <>
               <div className="flex items-center gap-2">
                 <span className="text-[10px]">
-                  Showing {startItem}-{endItem} of {totalCount} books for this
-                  tag
+                  {searchQuery.trim() && selectedTag ? (
+                    <>
+                      Showing {startItem}-{Math.min(endItem, displayCount)} of{" "}
+                      {displayCount} books matching &quot;{searchQuery}&quot;
+                      from {totalCount} in {selectedTag}
+                    </>
+                  ) : searchQuery.trim() ? (
+                    <>
+                      Showing {startItem}-{Math.min(endItem, displayCount)} of{" "}
+                      {displayCount} books matching &quot;{searchQuery}&quot;
+                    </>
+                  ) : selectedTag ? (
+                    <>
+                      Showing {startItem}-{endItem} of {totalCount} books in{" "}
+                      {selectedTag}
+                    </>
+                  ) : (
+                    <>
+                      Showing {startItem}-{endItem} of {totalCount} books
+                    </>
+                  )}
                 </span>
                 <button
                   onClick={onRefresh}
@@ -119,11 +149,6 @@ export default function BooksHeader({
                   />
                 </button>
               </div>
-              {searchQuery.trim() && (
-                <span className="text-xs text-muted-foreground">
-                  Search filters the visible list; the total stays tag-based.
-                </span>
-              )}
             </>
           )}
         </div>
