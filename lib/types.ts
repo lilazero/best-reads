@@ -61,7 +61,7 @@ export interface UserReadingList {
   userId: string;
   name: string;
   description?: string;
-  bookIds: string[];
+  bookIds: Array<{ bookId: string; bookAddedOnListOnDate: Date }>;
   isPublic: boolean;
   createdAt: Date;
   updatedAt: Date;

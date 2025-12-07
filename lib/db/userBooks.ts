@@ -282,10 +282,29 @@ export const addBookToReadingList = async (
     return null;
   }
 
+  // Check if book already exists in the list to prevent duplicates
+  const existingList = await db.collection("user_reading_lists").findOne({
+    _id: new ObjectId(listId),
+    "bookIds.bookId": bookId,
+  });
+
+  if (existingList) {
+    // Book already in list, return current list
+    return normalizeDocument<UserReadingList>(
+      existingList as Record<string, unknown>
+    );
+  }
+
   const result = await db.collection("user_reading_lists").findOneAndUpdate(
     { _id: new ObjectId(listId) },
     {
-      $addToSet: { bookIds: bookId },
+      // @ts-expect-error - MongoDB $push type is overly strict for nested objects
+      $push: {
+        bookIds: {
+          bookId,
+          bookAddedOnListOnDate: new Date(),
+        },
+      },
       $set: { updatedAt: new Date() },
     },
     { returnDocument: "after" }
@@ -315,7 +334,7 @@ export const removeBookFromReadingList = async (
     { _id: new ObjectId(listId) },
     {
       // @ts-expect-error - MongoDB $pull type is overly strict
-      $pull: { bookIds: bookId },
+      $pull: { bookIds: { bookId } },
       $set: { updatedAt: new Date() },
     },
     { returnDocument: "after" }

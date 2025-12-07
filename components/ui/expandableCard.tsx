@@ -23,6 +23,10 @@ interface ExpandableCardProps {
   isActive: boolean;
   onActivate: () => void;
   onDeactivate: () => void;
+  /**
+   * Optional extra classes to apply to the compact card. These will be appended
+   * to the default base classes so server and client markup remain consistent.
+   */
   cardClassName?: string;
 }
 
@@ -31,8 +35,13 @@ export function ExpandableCard({
   isActive,
   onActivate,
   onDeactivate,
-  cardClassName = "p-4 flex flex-col hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer",
+  cardClassName,
 }: ExpandableCardProps) {
+  const baseCardClass =
+    " p-1 flex flex-col hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer";
+  const combinedCardClass = cardClassName
+    ? `${baseCardClass} ${cardClassName}`
+    : baseCardClass;
   const id = useId();
   const ref = useRef<HTMLDivElement>(null!);
 
@@ -167,7 +176,7 @@ export function ExpandableCard({
       <motion.div
         layoutId={`card-${card.id}-${id}`}
         onClick={onActivate}
-        className={cardClassName}
+        className={combinedCardClass}
       >
         <div className="flex gap-4 flex-col w-full">
           {card.src && (
@@ -184,7 +193,7 @@ export function ExpandableCard({
           <div className="flex justify-center items-center flex-col w-full">
             <motion.h3
               layoutId={`title-${card.id}-${id}`}
-              className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left text-base truncate"
+              className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left text-base truncate w-full"
             >
               {card.title}
             </motion.h3>
@@ -218,7 +227,7 @@ export function ExpandableCard({
             </div>
             <motion.p
               layoutId={`description-${card.id}-${id}`}
-              className="text-neutral-600 dark:text-neutral-400 text-center md:text-left text-base w-full"
+              className="text-neutral-600 dark:text-neutral-400 text-center md:text-left text-base w-full h-24 overflow-hidden"
             >
               {card.description}
             </motion.p>

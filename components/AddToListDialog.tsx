@@ -277,7 +277,15 @@ export default function AddToListDialog({
             <>
               <div className="space-y-2 max-h-[300px] overflow-y-auto">
                 {lists.map((list) => {
-                  const hasBook = list.bookIds.includes(bookId);
+                  const hasBook = Array.isArray(list.bookIds)
+                    ? list.bookIds.some(
+                        (b: unknown) =>
+                          typeof b === "object" &&
+                          b !== null &&
+                          "bookId" in b &&
+                          (b as { bookId: string }).bookId === bookId
+                      )
+                    : false;
                   return (
                     <button
                       key={list.id}

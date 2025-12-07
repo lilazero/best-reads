@@ -38,6 +38,9 @@ interface BookCardProps {
   isActive: boolean;
   onActivate: () => void;
   onDeactivate: () => void;
+  hideAddToListButton?: boolean;
+  customWidth?: string;
+  customHeight?: string;
 }
 
 export default function BookCard({
@@ -47,6 +50,9 @@ export default function BookCard({
   isActive,
   onActivate,
   onDeactivate,
+  hideAddToListButton = false,
+  customWidth,
+  customHeight,
 }: BookCardProps) {
   const { isSignedIn, isLoaded } = useUser();
   const [showAddToList, setShowAddToList] = useState(false);
@@ -78,7 +84,7 @@ export default function BookCard({
       : undefined,
     ctaLink: showBuyButton ? "#" : undefined,
     ctaButtons:
-      isLoaded && isSignedIn ? (
+      !hideAddToListButton && isLoaded && isSignedIn ? (
         <Button
           onClick={(e) => {
             e.stopPropagation();
@@ -147,6 +153,11 @@ export default function BookCard({
         isActive={isActive}
         onActivate={onActivate}
         onDeactivate={onDeactivate}
+        cardClassName={
+          customWidth || customHeight
+            ? `${customWidth || ""} ${customHeight || ""}`
+            : undefined
+        }
       />
       <AddToListDialog
         open={showAddToList}

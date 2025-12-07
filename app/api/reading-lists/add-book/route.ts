@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     }
 
     // Check if book is already in the list
-    if (list.bookIds.includes(bookId)) {
+    if (list.bookIds.some((book) => book.bookId === bookId)) {
       return NextResponse.json(
         { error: "This book is already in the list" },
         { status: 400 }
