@@ -14,6 +14,7 @@ export interface ExpandableCardData {
   src?: string;
   ctaText?: string;
   ctaLink?: string;
+  ctaButtons?: React.ReactNode; // Custom buttons to display alongside or instead of default CTA
   content: React.ReactNode | (() => React.ReactNode);
 }
 
@@ -63,7 +64,7 @@ export function ExpandableCard({
               exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black/20 h-full w-full z-10"
             />
-            <div className="fixed inset-0 grid place-items-center z-100">
+            <div className="fixed inset-0 grid place-items-center z-20">
               <motion.button
                 key={`button-${card.id}-${id}`}
                 layout
@@ -118,19 +119,31 @@ export function ExpandableCard({
                       </motion.p>
                     </div>
 
-                    {card.ctaText && card.ctaLink && (
-                      <motion.a
-                        layout
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        href={card.ctaLink}
-                        target="_blank"
-                        className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 text-white"
-                      >
-                        {card.ctaText}
-                      </motion.a>
-                    )}
+                    <div className="flex gap-2">
+                      {card.ctaButtons && (
+                        <motion.div
+                          layout
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                        >
+                          {card.ctaButtons}
+                        </motion.div>
+                      )}
+                      {card.ctaText && card.ctaLink && (
+                        <motion.a
+                          layout
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          href={card.ctaLink}
+                          target="_blank"
+                          className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 text-white"
+                        >
+                          {card.ctaText}
+                        </motion.a>
+                      )}
+                    </div>
                   </div>
                   <div className="pt-4 relative px-4">
                     <motion.div

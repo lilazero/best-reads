@@ -5,14 +5,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/DashboardComponents/Footer";
 import Wrapper from "../components/ui/Wrapper";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { Toaster } from "sonner";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,6 +46,7 @@ export default function RootLayout({
                 <main className="flex-1">{children}</main>
                 <Footer />
               </div>
+              <Toaster position="top-right" richColors />
             </ClerkProvider>
           </Wrapper>
         </ThemeProvider>
