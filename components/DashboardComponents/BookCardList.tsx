@@ -50,19 +50,18 @@ export default function BookCardList({
           useHorizontalScroll
             ? "flex gap-2 overflow-x-auto pb-2 scroll-smooth"
             : (() => {
-                // Map allowed column counts to explicit class strings so Tailwind
-                // can detect them at build time. We only allow 1..6 columns.
+                // Map allowed column counts to mobile-first responsive Tailwind classes.
                 const count = Math.min(
                   Math.max(Math.floor(columnCount || 3), 1),
                   6
                 );
                 const colsMap: Record<number, string> = {
-                  1: "grid-cols-1 md:grid-cols-1 xl:grid-cols-1",
-                  2: "grid-cols-2 md:grid-cols-2 xl:grid-cols-2",
-                  3: "grid-cols-3 md:grid-cols-3 xl:grid-cols-3",
-                  4: "grid-cols-4 md:grid-cols-4 xl:grid-cols-4",
-                  5: "grid-cols-5 md:grid-cols-5 xl:grid-cols-5",
-                  6: "grid-cols-6 md:grid-cols-6 xl:grid-cols-6",
+                  1: "grid-cols-1",
+                  2: "grid-cols-1 sm:grid-cols-2",
+                  3: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
+                  4: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
+                  5: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5",
+                  6: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6",
                 };
 
                 return `grid gap-1 ${colsMap[count]}`;
