@@ -64,6 +64,7 @@ export default function RecommendedBooksList({
           columnCount={4}
           previewImageFit="card"
           previewImageHeight={"h-92"}
+          previewImageBackgroundTransparent={true}
         />
       )}
     </>

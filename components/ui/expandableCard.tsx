@@ -39,6 +39,8 @@ interface ExpandableCardProps {
   previewImageHeight?: string;
   /** Width for the preview image canvas in 'fixed' mode (Tailwind class string). Defaults to 'w-[180px]'. */
   previewImageWidth?: string;
+  /** If true, the preview image container will have a transparent background. */
+  previewImageBackgroundTransparent?: boolean;
 }
 
 export function ExpandableCard({
@@ -50,6 +52,7 @@ export function ExpandableCard({
   previewImageFit = "card",
   previewImageHeight = "h-60",
   previewImageWidth = "w-[180px]",
+  previewImageBackgroundTransparent = false,
 }: ExpandableCardProps) {
   const baseCardClass =
     " p-1 flex flex-col hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer";
@@ -201,7 +204,11 @@ export function ExpandableCard({
             <motion.div layoutId={`image-${card.id}-${id}`}>
               {previewImageFit === "card" ? (
                 <div
-                  className={`w-full rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 ${previewImageHeight}`}
+                  className={`w-full rounded-lg overflow-hidden ${
+                    previewImageBackgroundTransparent
+                      ? "bg-transparent"
+                      : "bg-neutral-100 dark:bg-neutral-800"
+                  } ${previewImageHeight}`}
                 >
                   <Image
                     width={400}
@@ -213,7 +220,11 @@ export function ExpandableCard({
                 </div>
               ) : (
                 <div
-                  className={`mx-auto rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 ${previewImageHeight} ${previewImageWidth}`}
+                  className={`mx-auto rounded-lg overflow-hidden ${
+                    previewImageBackgroundTransparent
+                      ? "bg-transparent"
+                      : "bg-neutral-100 dark:bg-neutral-800"
+                  } ${previewImageHeight} ${previewImageWidth}`}
                 >
                   <Image
                     width={400}
