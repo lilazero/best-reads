@@ -61,11 +61,11 @@ export default function BooksHeader({
   }, [searchQuery]);
 
   return (
-    <div className="w-full max-w-6xl px-4 mb-3 flex items-center justify-between gap-4">
-      <h2 className="text-2xl font-bold ">{title}</h2>
+    <div className="w-full max-w-6xl px-4 mb-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <h2 className="text-2xl font-bold w-full sm:w-auto">{title}</h2>
 
-      <div className="flex-1 flex justify-center">
-        <div className="flex flex-row gap-2 items-center w-full justify-center">
+      <div className="flex-1 flex justify-center w-full">
+        <div className="flex flex-col sm:flex-row gap-2 items-center w-full sm:justify-center">
           <SearchFilter
             books={books}
             initialQuery={searchQuery}
@@ -75,7 +75,7 @@ export default function BooksHeader({
         </div>
       </div>
 
-      <div className="min-w-fit flex-col">
+      <div className="w-full sm:w-auto">
         {selectedTag && (
           <TooltipProvider>
             <Tooltip>
@@ -111,7 +111,7 @@ export default function BooksHeader({
             </Tooltip>
           </TooltipProvider>
         )}
-        <div className="flex flex-col items-end gap-1 text-gray-600 dark:text-gray-400 min-w-fit">
+        <div className="flex flex-col items-start sm:items-end gap-1 text-gray-600 dark:text-gray-400 w-full sm:min-w-fit">
           {totalCount > 0 && (
             <>
               <div className="flex items-center gap-2">

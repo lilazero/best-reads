@@ -114,6 +114,7 @@ export default function BooksPage() {
             books={filteredBooks}
             showBuyButton={false}
             columnCount={6}
+            previewImageBackgroundTransparent={true}
           />
 
           {totalPages > 1 && (
