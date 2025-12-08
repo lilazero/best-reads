@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["mongodb"],
+  // Enable browser source maps to keep Turbopack sourcemap handling consistent
+  productionBrowserSourceMaps: true,
   images: {
     remotePatterns: [
       {

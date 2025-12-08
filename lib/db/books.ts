@@ -103,3 +103,38 @@ export const getTags = async (): Promise<
     count: number;
   }[];
 };
+
+/**
+ * Get multiple books by their IDs in a single query.
+ * @param ids - Array of book ID strings
+ * @returns Array of normalized Book objects in the same order as input IDs
+ */
+export const getBooksByIds = async (ids: string[]): Promise<Book[]> => {
+  const db = await getDb();
+
+  // Filter valid IDs
+  const validIds = ids.filter((id) => ObjectId.isValid(id));
+  if (validIds.length === 0) return [];
+
+  // Convert to ObjectIds
+  const objectIds = validIds.map((id) => new ObjectId(id));
+
+  // Batch fetch
+  const docs = await db
+    .collection("books")
+    .find({ _id: { $in: objectIds } })
+    .toArray();
+
+  // Create a map for O(1) lookup
+  const bookMap = new Map(
+    docs.map((doc) => [
+      doc._id.toString(),
+      normalizeDocument<Book>(doc as Record<string, unknown>),
+    ])
+  );
+
+  // Return in original order, filtering out not-found books
+  return validIds
+    .map((id) => bookMap.get(id))
+    .filter((book): book is Book => book !== undefined);
+};

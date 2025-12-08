@@ -5,6 +5,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/DashboardComponents/Footer";
 import Wrapper from "../components/ui/Wrapper";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import { Toaster } from "sonner";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-primary-background`}
       >
         <ThemeProvider
           attribute="class"
@@ -38,11 +40,14 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Wrapper>
-            <Header />
-            <div className="min-h-screen flex flex-col">
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
+            <ClerkProvider>
+              <Header />
+              <div className="min-h-screen flex flex-col">
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+              <Toaster position="top-right" richColors />
+            </ClerkProvider>
           </Wrapper>
         </ThemeProvider>
       </body>

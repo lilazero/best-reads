@@ -23,14 +23,32 @@ import {
   NavigationMenuPositioner,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import { SignInButton, useUser, useClerk } from "@clerk/nextjs";
 
 export default function Header() {
+  const { isSignedIn, user, isLoaded } = useUser();
+  const { signOut } = useClerk();
+
+  const getUserInitials = () => {
+    if (!user) return "??";
+    if (user.firstName && user.lastName) {
+      return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
+    }
+    if (user.username) {
+      return user.username.substring(0, 2).toUpperCase();
+    }
+    return (
+      user.emailAddresses[0]?.emailAddress.substring(0, 2).toUpperCase() || "??"
+    );
+  };
+
   return (
     <header className="flex items-center justify-between pt-2  backdrop-blur-sm">
       {/* Logo */}
       <Link href="/">
         <img src="/logo.png" alt="Logo" width={100} height={50} />
       </Link>
+
       {/* Header nav Links area */}
       <div className="flex">
         <NavigationMenu className="mr-4">
@@ -69,8 +87,8 @@ export default function Header() {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink href="/">
-                <Button variant="link">Home</Button>
+              <NavigationMenuLink href="/MyBooks">
+                <Button variant="link">My Books</Button>
               </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
@@ -78,56 +96,80 @@ export default function Header() {
             <NavigationMenuPopup />
           </NavigationMenuPositioner>
         </NavigationMenu>
-        {/* User Avatar */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              className="p-1 transition rounded-full cursor-pointer outline-none bg-linear-to-b h-fit from-red-500 to-blue-500 hover:brightness-105 focus-visible:ring-2 focus-visible:ring-ring"
-              aria-label="Open user menu"
-              type="button"
-            >
-              <Avatar className="size-10 ring-2 ring-background">
-                <AvatarImage
-                  src="https://www.europaforum.at/wp2019/wp-content/uploads/2022/06/edi_rama_portret.jpg"
-                  alt="@evilrabbit"
-                  width="40"
-                  height="40"
-                  className="object-cover"
-                />
-                <AvatarFallback>AR</AvatarFallback>
-              </Avatar>
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64">
-            <DropdownMenuLabel>
-              <div className="flex items-center gap-3">
-                <Avatar className="size-10">
+
+        {/* User Authentication */}
+        {!isLoaded ? (
+          // Loading state
+          <div className="size-10 animate-pulse rounded-full bg-muted" />
+        ) : isSignedIn ? (
+          // Signed in - show user dropdown
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="p-1 transition rounded-full cursor-pointer outline-none bg-linear-to-br h-fit from-primary/80 to-primary hover:brightness-105 focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="Open user menu"
+                type="button"
+              >
+                <Avatar className="size-10 ring-2 ring-background">
                   <AvatarImage
-                    src="https://www.europaforum.at/wp2019/wp-content/uploads/2022/06/edi_rama_portret.jpg"
-                    alt="@evilrabbit"
+                    src={user?.imageUrl}
+                    alt={user?.username || "User"}
+                    width="40"
+                    height="40"
+                    className="object-cover"
                   />
-                  <AvatarFallback>AR</AvatarFallback>
+                  <AvatarFallback>{getUserInitials()}</AvatarFallback>
                 </Avatar>
-                <div className="space-y-0.5">
-                  <p className="text-sm font-semibold">Alex Reader</p>
-                  <p className="text-xs text-muted-foreground">
-                    alex.reader@example.com
-                  </p>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuLabel>
+                <div className="flex items-center gap-3">
+                  <Avatar className="size-10">
+                    <AvatarImage
+                      src={user?.imageUrl}
+                      alt={user?.username || "User"}
+                    />
+                    <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                  </Avatar>
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-semibold">
+                      {user?.firstName && user?.lastName
+                        ? `${user.firstName} ${user.lastName}`
+                        : user?.username || "User"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {user?.emailAddresses[0]?.emailAddress}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>placeholder #1</DropdownMenuItem>
-            <DropdownMenuItem>placeholder #2</DropdownMenuItem>
-            <DropdownMenuItem>placeholder #3</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <ThemeChangeButton asDropdownItem />
-            <DropdownMenuItem>placeholder Settings</DropdownMenuItem>
-            <DropdownMenuItem variant="destructive">
-              placeholder Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/MyBooks">My Books</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/profile">My Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/clubs">My Clubs</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <ThemeChangeButton asDropdownItem />
+              <DropdownMenuItem asChild>
+                <Link href="/settings">Settings</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem variant="destructive" onClick={() => signOut()}>
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          // Not signed in - show sign in button
+          <SignInButton mode="modal">
+            <Button>Sign In</Button>
+          </SignInButton>
+        )}
       </div>
     </header>
   );

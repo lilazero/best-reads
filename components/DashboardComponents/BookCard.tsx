@@ -1,12 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import * as LucideIcons from "lucide-react";
-import { BookOpen, Star } from "lucide-react";
+import { BookOpen, Star, ListPlus } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 import type { Book } from "@/lib/types";
 import { tags as tagCatalog } from "@/lib/mockData";
 import { ExpandableCard } from "../ui/expandableCard";
+import AddToListDialog from "../AddToListDialog";
+import { Button } from "../ui/button";
 
 const tagIconLookup = tagCatalog.reduce<Record<string, string | undefined>>(
   (acc, tag) => {
@@ -34,6 +38,12 @@ interface BookCardProps {
   isActive: boolean;
   onActivate: () => void;
   onDeactivate: () => void;
+  hideAddToListButton?: boolean;
+  customWidth?: string;
+  customHeight?: string;
+  previewImageFit?: "card" | "fixed";
+  previewImageHeight?: string;
+  previewImageWidth?: string;
 }
 
 export default function BookCard({
@@ -43,7 +53,16 @@ export default function BookCard({
   isActive,
   onActivate,
   onDeactivate,
+  hideAddToListButton = false,
+  customWidth,
+  customHeight,
+  previewImageFit = "card",
+  previewImageHeight,
+  previewImageWidth,
 }: BookCardProps) {
+  const { isSignedIn, isLoaded } = useUser();
+  const [showAddToList, setShowAddToList] = useState(false);
+
   const rating = (book.rating ?? 0).toFixed(1);
   const reviews = 120 + index * 9;
 
@@ -70,6 +89,19 @@ export default function BookCard({
         : "Learn More"
       : undefined,
     ctaLink: showBuyButton ? "#" : undefined,
+    ctaButtons:
+      !hideAddToListButton && isLoaded && isSignedIn ? (
+        <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowAddToList(true);
+          }}
+          className="px-4 py-3 text-sm rounded-full font-bold bg-blue-500 hover:bg-blue-600 text-white"
+        >
+          <ListPlus className="w-4 h-4 mr-1" />
+          Add to List
+        </Button>
+      ) : undefined,
     content: () => (
       <div className="space-y-4 ">
         <div>
@@ -121,11 +153,27 @@ export default function BookCard({
   };
 
   return (
-    <ExpandableCard
-      card={cardData}
-      isActive={isActive}
-      onActivate={onActivate}
-      onDeactivate={onDeactivate}
-    />
+    <>
+      <ExpandableCard
+        card={cardData}
+        isActive={isActive}
+        onActivate={onActivate}
+        onDeactivate={onDeactivate}
+        cardClassName={
+          customWidth || customHeight
+            ? `${customWidth || ""} ${customHeight || ""}`
+            : undefined
+        }
+        previewImageFit={previewImageFit}
+        previewImageHeight={previewImageHeight}
+        previewImageWidth={previewImageWidth}
+      />
+      <AddToListDialog
+        open={showAddToList}
+        onOpenChange={setShowAddToList}
+        bookId={book.id}
+        bookTitle={book.title}
+      />
+    </>
   );
 }
