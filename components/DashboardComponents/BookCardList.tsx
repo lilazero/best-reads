@@ -15,6 +15,7 @@ interface BookCardListProps {
   previewImageFit?: "card" | "fixed";
   previewImageHeight?: string;
   previewImageWidth?: string;
+  previewImageBackgroundTransparent?: boolean;
 }
 /**
  * @props books - An array of Book objects to be displayed in the recommended book list.
@@ -35,6 +36,7 @@ export default function BookCardList({
   previewImageFit = "card",
   previewImageHeight,
   previewImageWidth,
+  previewImageBackgroundTransparent = false,
 }: BookCardListProps) {
   const [activeCardId, setActiveCardId] = useState<string | null>(null);
 
@@ -82,6 +84,9 @@ export default function BookCardList({
             previewImageFit={previewImageFit}
             previewImageHeight={previewImageHeight}
             previewImageWidth={previewImageWidth}
+            previewImageBackgroundTransparent={
+              previewImageBackgroundTransparent
+            }
           />
         ))}
       </div>

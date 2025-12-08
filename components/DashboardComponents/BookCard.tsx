@@ -44,6 +44,7 @@ interface BookCardProps {
   previewImageFit?: "card" | "fixed";
   previewImageHeight?: string;
   previewImageWidth?: string;
+  previewImageBackgroundTransparent?: boolean;
 }
 
 export default function BookCard({
@@ -59,6 +60,7 @@ export default function BookCard({
   previewImageFit = "card",
   previewImageHeight,
   previewImageWidth,
+  previewImageBackgroundTransparent = false,
 }: BookCardProps) {
   const { isSignedIn, isLoaded } = useUser();
   const [showAddToList, setShowAddToList] = useState(false);
@@ -167,6 +169,7 @@ export default function BookCard({
         previewImageFit={previewImageFit}
         previewImageHeight={previewImageHeight}
         previewImageWidth={previewImageWidth}
+        previewImageBackgroundTransparent={previewImageBackgroundTransparent}
       />
       <AddToListDialog
         open={showAddToList}
