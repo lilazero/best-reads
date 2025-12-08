@@ -7,6 +7,7 @@ import Wrapper from "../components/ui/Wrapper";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "sonner";
 import { ClerkProvider } from "@clerk/nextjs";
+import UserSync from "@/components/UserSync";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({
         >
           <Wrapper>
             <ClerkProvider>
+              <UserSync />
               <Header />
               <div className="min-h-screen flex flex-col">
                 <main className="flex-1">{children}</main>
