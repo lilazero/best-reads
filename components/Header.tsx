@@ -95,81 +95,83 @@ export default function Header() {
           <NavigationMenuPositioner>
             <NavigationMenuPopup />
           </NavigationMenuPositioner>
-        </NavigationMenu>
-
-        {/* User Authentication */}
-        {!isLoaded ? (
-          // Loading state
-          <div className="size-10 animate-pulse rounded-full bg-muted" />
-        ) : isSignedIn ? (
-          // Signed in - show user dropdown
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                className="p-1 transition rounded-full cursor-pointer outline-none bg-linear-to-br h-fit from-primary/80 to-primary hover:brightness-105 focus-visible:ring-2 focus-visible:ring-ring"
-                aria-label="Open user menu"
-                type="button"
-              >
-                <Avatar className="size-10 ring-2 ring-background">
-                  <AvatarImage
-                    src={user?.imageUrl}
-                    alt={user?.username || "User"}
-                    width="40"
-                    height="40"
-                    className="object-cover"
-                  />
-                  <AvatarFallback>{getUserInitials()}</AvatarFallback>
-                </Avatar>
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-64">
-              <DropdownMenuLabel>
-                <div className="flex items-center gap-3">
-                  <Avatar className="size-10">
+          {/* User Authentication */}
+          {!isLoaded ? (
+            // Loading state
+            <div className="size-10 animate-pulse rounded-full bg-muted" />
+          ) : isSignedIn ? (
+            // Signed in - show user dropdown
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="p-1 transition rounded-full cursor-pointer outline-none bg-linear-to-br h-fit from-primary/80 to-primary hover:brightness-105 focus-visible:ring-2 focus-visible:ring-ring"
+                  aria-label="Open user menu"
+                  type="button"
+                >
+                  <Avatar className="size-10 ring-2 ring-background">
                     <AvatarImage
                       src={user?.imageUrl}
                       alt={user?.username || "User"}
+                      width="40"
+                      height="40"
+                      className="object-cover"
                     />
                     <AvatarFallback>{getUserInitials()}</AvatarFallback>
                   </Avatar>
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-semibold">
-                      {user?.firstName && user?.lastName
-                        ? `${user.firstName} ${user.lastName}`
-                        : user?.username || "User"}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {user?.emailAddresses[0]?.emailAddress}
-                    </p>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64">
+                <DropdownMenuLabel>
+                  <div className="flex items-center gap-3">
+                    <Avatar className="size-10">
+                      <AvatarImage
+                        src={user?.imageUrl}
+                        alt={user?.username || "User"}
+                      />
+                      <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                    </Avatar>
+                    <div className="space-y-0.5">
+                      <p className="text-sm font-semibold">
+                        {user?.firstName && user?.lastName
+                          ? `${user.firstName} ${user.lastName}`
+                          : user?.username || "User"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {user?.emailAddresses[0]?.emailAddress}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/MyBooks">My Books</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/profile">My Profile</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/clubs">My Clubs</Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <ThemeChangeButton asDropdownItem />
-              <DropdownMenuItem asChild>
-                <Link href="/settings">Settings</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem variant="destructive" onClick={() => signOut()}>
-                Log out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          // Not signed in - show sign in button
-          <SignInButton mode="modal">
-            <Button>Sign In</Button>
-          </SignInButton>
-        )}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/MyBooks">My Books</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">My Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/clubs">My Clubs</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <ThemeChangeButton asDropdownItem />
+                <DropdownMenuItem asChild>
+                  <Link href="/settings">Settings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => signOut()}
+                >
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            // Not signed in - show sign in button
+            <SignInButton mode="modal">
+              <Button>Sign In</Button>
+            </SignInButton>
+          )}
+        </NavigationMenu>
       </div>
     </header>
   );
