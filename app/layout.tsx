@@ -21,6 +21,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Best Reads",
   description: "Read your best",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({
