@@ -1,5 +1,6 @@
+import React, { Suspense } from "react";
 import BookCardList from "@/components/DashboardComponents/BookCardList";
-import { ListActionsMenu } from "./ListActionsMenu";
+import ReadingListCardActionsWrapper from "./ReadingListCardActionsClientWrapper";
 import type { ListWithBooks } from "./types";
 
 interface ReadingListCardProps {
@@ -22,20 +23,24 @@ export function ReadingListCard({ list }: ReadingListCardProps) {
           )}
         </div>
 
-        <ListActionsMenu />
+        <Suspense fallback={<div className="w-8 h-8" />}>
+          <ReadingListCardActionsWrapper />
+        </Suspense>
       </div>
 
       {list.books.length > 0 ? (
         <div className="relative">
           <div className="absolute right-0 top-0 bottom-2 w-12 bg-linear-to-l pointer-events-none z-10" />
 
-          <BookCardList
-            books={list.books}
-            showBuyButton={false}
-            useHorizontalScroll={true}
-            hideAddToListButton={true}
-            cardWidth="w-48 flex-shrink-0"
-          />
+          <Suspense fallback={<div className="h-48" />}>
+            <BookCardList
+              books={list.books}
+              showBuyButton={false}
+              useHorizontalScroll={true}
+              hideAddToListButton={true}
+              cardWidth="w-48 flex-shrink-0"
+            />
+          </Suspense>
         </div>
       ) : (
         <div className="py-8 text-center text-muted-foreground border border-dashed rounded-lg">
