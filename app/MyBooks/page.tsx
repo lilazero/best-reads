@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { currentUser } from "@clerk/nextjs/server";
-import { cookies } from "next/headers";
+import { getMyBooks } from "@/lib/getMyBooks";
 import { Button } from "@/components/ui/button";
 import { ReadingListsSection } from "@/components/MyBooksComponents/ReadingListsSection";
 import type { ListWithBooks } from "@/components/MyBooksComponents/types";
@@ -53,48 +53,16 @@ export default async function MyBooksPage({
     );
   }
 
-  // Fetch the prepared lists+books from our server API route.
-  // Use an absolute base so Node's fetch can parse the URL correctly in dev.
-  const base = process.env.NEXT_PUBLIC_SITE_ORIGIN ?? "http://localhost:3000";
-  let payload: { lists: ListWithBooks[]; total: number } = {
-    lists: [],
-    total: 0,
-  };
+  // Get the prepared lists+books directly from server helper (no HTTP fetch)
+  let listsWithBooks: ListWithBooks[] = [];
+  let totalLists = 0;
   try {
-    // Forward incoming cookies so the internal API can authenticate the user
-    const cookieStore = await cookies();
-    let cookieHeader = "";
-    try {
-      const cookieList =
-        typeof cookieStore?.getAll === "function" ? cookieStore.getAll() : [];
-      if (Array.isArray(cookieList)) {
-        cookieHeader = cookieList
-          .map(
-            (c) =>
-              `${(c as { name?: string }).name}=${
-                (c as { value?: string }).value
-              }`
-          )
-          .join("; ");
-      }
-    } catch {
-      cookieHeader = "";
-    }
-
-    const res = await fetch(`${base}/api/my-books?page=${currentPage}`, {
-      cache: "no-store",
-      headers: cookieHeader ? { cookie: cookieHeader } : undefined,
-    });
-    if (res.ok) {
-      payload = await res.json();
-    } else {
-      console.error("Failed to fetch /api/my-books", res.status);
-    }
+    const payload = await getMyBooks(currentPage);
+    listsWithBooks = payload.lists ?? [];
+    totalLists = payload.total ?? 0;
   } catch (err) {
-    console.error("Error fetching /api/my-books", err);
+    console.error("Error getting my books", err);
   }
-  const listsWithBooks: ListWithBooks[] = payload.lists ?? [];
-  const totalLists: number = payload.total ?? 0;
 
   const totalPages = Math.ceil(totalLists / LISTS_PER_PAGE);
   const buildPageUrl = (page: number) => `/MyBooks?page=${page}`;
