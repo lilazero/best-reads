@@ -32,7 +32,7 @@ export default function GroupCard({
 
   return (
     <div className="flex gap-4 p-4 border-b border-neutral-200 dark:border-neutral-800 last:border-b-0">
-      <div className={`flex-shrink-0 ${sizeClasses[iconSize]}`}>
+      <div className={`shrink-0 ${sizeClasses[iconSize]}`}>
         <Link href={groupLink} className="block">
           {group.iconUrl ? (
             <Image

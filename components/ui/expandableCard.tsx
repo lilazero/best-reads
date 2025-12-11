@@ -5,6 +5,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import useScrollLock from "@/hooks/use-scroll-lock";
+import Link from "next/link";
 
 export interface ExpandableCardData {
   id: string;
@@ -13,6 +14,8 @@ export interface ExpandableCardData {
   rating?: string;
   firstTag?: React.ReactNode;
   src?: string;
+  /** Optional href for the title to link to (e.g. `/books/:id`) */
+  href?: string;
   ctaText?: string;
   ctaLink?: string;
   ctaButtons?: React.ReactNode; // Custom buttons to display alongside or instead of default CTA
@@ -139,7 +142,13 @@ export function ExpandableCard({
                         layoutId={`title-${card.id}-${id}`}
                         className="font-medium text-neutral-700 dark:text-neutral-200 text-base"
                       >
-                        {card.title}
+                        {card.href ? (
+                          <Link href={card.href} className="hover:underline">
+                            {card.title}
+                          </Link>
+                        ) : (
+                          card.title
+                        )}
                       </motion.h3>
                       <motion.p
                         layoutId={`description-${card.id}-${id}`}
@@ -242,7 +251,13 @@ export function ExpandableCard({
               layoutId={`title-${card.id}-${id}`}
               className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left text-base truncate w-full"
             >
-              {card.title}
+              {card.href ? (
+                <Link href={card.href} className="hover:underline">
+                  {card.title}
+                </Link>
+              ) : (
+                card.title
+              )}
             </motion.h3>
             <div className="flex items-center gap-2 w-full justify-between">
               <div className="flex items-center gap-2 min-w-0">

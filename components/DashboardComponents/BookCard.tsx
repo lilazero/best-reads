@@ -85,6 +85,7 @@ export default function BookCard({
         </span>
       ) : undefined,
     src: book.src,
+    href: `/books/${book.id}`,
     ctaText: showBuyButton
       ? book.price
         ? `Buy for ${book.price}`

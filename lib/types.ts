@@ -12,6 +12,11 @@ export type Book = {
   description?: string;
   longDescription?: string;
   tags?: Tag[];
+  // optional extended metadata
+  authors?: { name: string }[];
+  published?: string;
+  pages?: number;
+  publisher?: string;
 };
 
 export interface Group {

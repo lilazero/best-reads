@@ -9,6 +9,7 @@ const isPublicRoute = createRouteMatcher([
   "/MyBooks(.*)",
   "/api/my-books(.*)",
   "/api/debug(.*)",
+  "/api/books(.*)",
   "/api/ping(.*)",
   "/clubs(.*)",
   "/profile/(.*)",
