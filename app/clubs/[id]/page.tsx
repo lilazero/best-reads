@@ -12,6 +12,306 @@ interface ClubPageProps {
 }
 
 export default function ClubPage({ params }: ClubPageProps) {
+  // Special-case mock route for Goodreads 'Read With Jenna' group id
+  // Accept either plain id or slugged forms like `988700-read-with-jenna-official`
+  if (params.id.includes("988700")) {
+    return (
+      <div className="min-h-screen bg-primary-background dark:bg-black py-8">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="mainContentContainer">
+            <div className="mainContent">
+              <div id="premiumAdTop">
+                <div
+                  data-react-class="ReactComponents.GoogleBannerAd"
+                  data-react-props='{"adId":"","className":"googleBannerAd--pushdown"}'
+                />
+              </div>
+
+              <div className="mainContentFloat">
+                <div id="flashContainer" />
+
+                <div className="groupPic">
+                  <div className="vcenterContainer">
+                    <a
+                      title="Read With Jenna (Official)"
+                      className="groupPicLink"
+                      href="/photo/group/988700-read-with-jenna-official"
+                    >
+                      <Image
+                        alt="Read With Jenna (Official)"
+                        src="https://images.gr-assets.com/groups/1643040655p3/988700.jpg"
+                        width={120}
+                        height={120}
+                        className="rounded-lg object-cover"
+                      />
+                    </a>
+                  </div>
+                  <div className="joinLinks">
+                    <a
+                      className="gr-button"
+                      href="/group/join/988700-read-with-jenna-official"
+                    >
+                      Join Group
+                    </a>
+                  </div>
+                </div>
+
+                <div className="groupMasthead" />
+                <h1>Read With Jenna (Official)</h1>
+
+                <div className="leftContainer">
+                  <div id="magicSpacer">
+                    <div className="vcenterContainer">
+                      <a
+                        title="Read With Jenna (Official)"
+                        className="groupPicLink"
+                        href="/photo/group/988700-read-with-jenna-official"
+                      >
+                        <Image
+                          alt="Read With Jenna (Official)"
+                          src="https://images.gr-assets.com/groups/1643040655p3/988700.jpg"
+                          width={120}
+                          height={120}
+                          className="rounded-lg object-cover"
+                        />
+                      </a>
+                    </div>
+                    <div className="joinLinks">
+                      <a
+                        className="gr-button"
+                        href="/group/join/988700-read-with-jenna-official"
+                      >
+                        Join Group
+                      </a>
+                    </div>
+                  </div>
+
+                  <div id="topInfo">
+                    <div className="description">
+                      <span>
+                        When anyone on the TODAY team is looking for a book
+                        recommendation, there is only one person to turn to:
+                        Jenna Bush Hager.
+                        <br />
+                        <br />
+                        Jenna will select a book and as you read along,
+                        we&apos;ll be posting updates right here with
+                        thought-provoking conversation starters. We hope
+                        you&apos;ll engage with the rest of the
+                        <a
+                          href="https://www.today.com/read-with-jenna"
+                          rel="nofollow noopener"
+                        >
+                          #ReadWithJenna
+                        </a>{" "}
+                        community to make this book club your own.
+                        <br />
+                        <br />
+                        Our current book is{" "}
+                        <a
+                          href="https://www.goodreads.com/en/book/show/57846320"
+                          rel="nofollow noopener"
+                        >
+                          &quot;The School for Good Mothers&quot; by Jessamine
+                          Chan
+                        </a>
+                        .
+                      </span>
+                    </div>
+
+                    <div id="groupBox">
+                      <div className="infoBoxRowTitle">category</div>
+                      <div className="infoBoxRowItem narrow">
+                        <a href="/group/topic/1-books-literature?topic=Books+%26+Literature">
+                          Books &amp; Literature
+                        </a>{" "}
+                        -&gt;{" "}
+                        <a href="/group/subtopic/14-literature-fiction?subtopic=Literature+%26+Fiction&amp;topic=Books+%26+Literature">
+                          Literature &amp; Fiction
+                        </a>
+                      </div>
+
+                      <div className="infoBoxRowTitle">tags</div>
+                      <div className="infoBoxRowItem">
+                        <a href="/group/show_tag/988700?name=book-club">
+                          book-club
+                        </a>
+                        ,{" "}
+                        <a href="/group/show_tag/988700?name=book-clubs">
+                          book-clubs
+                        </a>
+                        ,{" "}
+                        <a href="/group/show_tag/988700?name=book-group">
+                          book-group
+                        </a>
+                      </div>
+
+                      <div className="infoBoxRowTitle">website</div>
+                      <div className="infoBoxRowItem">
+                        <a
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href="https://www.today.com/read-with-jenna"
+                        >
+                          https://www.today.com/read-with-jenna
+                        </a>
+                      </div>
+
+                      <div className="infoBoxRowTitle">group type</div>
+                      <div className="infoBoxRowItem">
+                        This is a private group. Members must be invited or
+                        approved by the group&apos;s moderator.
+                      </div>
+
+                      <div className="infoBoxRowTitle">rules</div>
+                      <div className="infoBoxRowItem">
+                        Please be courteous to other book club members.
+                        Self-promotion and spam will be removed.
+                      </div>
+                      <br className="clear" />
+                    </div>
+                    <div className="clear" />
+                  </div>
+
+                  <div className="flagOptionContainer">
+                    <a
+                      className="flag"
+                      rel="nofollow"
+                      title="Flag this group as inappropriate."
+                      id="flag_link988700"
+                      href="#"
+                    >
+                      flag
+                    </a>
+                  </div>
+
+                  <div className="clear" />
+
+                  <div className="clearFloats bigBox">
+                    <div className="h2Container gradientHeaderContainer">
+                      <h2 className="brownBackground">
+                        <a href="#">Videos</a>
+                      </h2>
+                    </div>
+                    <div className="bigBoxBody">
+                      <div className="bigBoxContent containerWithHeaderContent">
+                        <div className="clearFix">
+                          <div
+                            style={{
+                              float: "left",
+                              paddingRight: 10,
+                              width: 296,
+                            }}
+                          >
+                            <div className="videoThumbnail">
+                              <a href="#">
+                                <Image
+                                  width={296}
+                                  height={166}
+                                  alt="Video"
+                                  src="https://i.ytimg.com/vi/GizuavSGjlg/mqdefault.jpg"
+                                />
+                              </a>
+                            </div>
+                            <a className="videoTitle" href="#">
+                              Barbara Bush Shares The Three Books She Recommends
+                              Everyone Reads
+                            </a>
+                          </div>
+                        </div>
+                        <div className="textRight actionLinks clearTop">
+                          <a className="actionLink" href="#">
+                            More videos…
+                          </a>
+                        </div>
+                        <div className="clear" />
+                      </div>
+                    </div>
+                    <div className="bigBoxBottom" />
+                  </div>
+
+                  <div id="discussionBoard">
+                    <div className="clearFloats bigBox">
+                      <div className="h2Container gradientHeaderContainer">
+                        <h2 className="brownBackground">
+                          <a href="#">Discussion Board</a>
+                        </h2>
+                      </div>
+                      <div className="bigBoxBody">
+                        <div className="bigBoxContent containerWithHeaderContent">
+                          <div className="mediumText">
+                            Please <a href="#">join this group</a> to view the
+                            discussion boards.
+                          </div>
+                          <div className="clear" />
+                        </div>
+                      </div>
+                      <div className="bigBoxBottom" />
+                    </div>
+                  </div>
+
+                  <div className="clearFloats bigBox">
+                    <div className="h2Container gradientHeaderContainer">
+                      <h2 className="brownBackground">
+                        <a href="#">Members (29527)</a>
+                      </h2>
+                    </div>
+                    <div className="bigBoxBody">
+                      <div className="bigBoxContent containerWithHeaderContent">
+                        <div
+                          className="leftAlignedImage"
+                          style={{
+                            width: 75,
+                            textAlign: "center",
+                            overflow: "hidden",
+                          }}
+                        >
+                          <Image
+                            alt="SUHARLEY"
+                            src="https://images.gr-assets.com/users/1706941024p2/155862808.jpg"
+                            width={50}
+                            height={66}
+                          />
+                          <br />
+                          SUHARLEY
+                        </div>
+                        <div className="textRight actionLinks clearTop">
+                          <a rel="nofollow" className="actionLink" href="#">
+                            More members…
+                          </a>
+                        </div>
+                        <div className="clear" />
+                      </div>
+                    </div>
+                    <div className="bigBoxBottom" />
+                  </div>
+                </div>
+
+                <div className="rightContainer">
+                  <div className="stacked">
+                    <div className="groupNav clearFix groupHomepage">
+                      <div className="actionLinkLites">
+                        <div className="clearFix">
+                          <div className="col">
+                            <a className="current" href="#">
+                              Group Home
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="clear" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const group = GroupDetails[params.id];
 
   if (!group) {
@@ -23,7 +323,7 @@ export default function ClubPage({ params }: ClubPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-black py-8">
+    <div className="min-h-screen bg-primary-background dark:bg-black py-8">
       <div className="max-w-7xl mx-auto px-4">
         {/* Back link */}
         <Link
@@ -37,7 +337,7 @@ export default function ClubPage({ params }: ClubPageProps) {
         <div className="bg-white dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-800 p-6 mb-6">
           <div className="flex gap-6 items-start">
             {/* Group Icon */}
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               {group.iconUrl ? (
                 <Image
                   src={group.iconUrl}
