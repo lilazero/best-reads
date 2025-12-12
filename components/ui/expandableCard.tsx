@@ -19,6 +19,8 @@ export interface ExpandableCardData {
   ctaText?: string;
   ctaLink?: string;
   ctaButtons?: React.ReactNode; // Custom buttons to display alongside or instead of default CTA
+  /** Optional actions node rendered to the right of the title (e.g. dropdown menu) */
+  actions?: React.ReactNode;
   content: React.ReactNode | (() => React.ReactNode);
 }
 
@@ -181,6 +183,17 @@ export function ExpandableCard({
                         >
                           {card.ctaText}
                         </motion.a>
+                      )}
+                      {card.actions && (
+                        <motion.div
+                          layout
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="ml-2"
+                        >
+                          {card.actions}
+                        </motion.div>
                       )}
                     </div>
                   </div>
