@@ -5,6 +5,9 @@ import type { LucideIcon } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { BookOpen, Star, ListPlus } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+
+import EditBookDialog from "../EditBookDialog";
 
 import type { Book } from "@/lib/types";
 import { tags as tagCatalog } from "@/lib/mockData";
@@ -62,8 +65,13 @@ export default function BookCard({
   previewImageWidth,
   previewImageBackgroundTransparent = false,
 }: BookCardProps) {
-  const { isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, isLoaded, user } = useUser();
+  const router = useRouter();
+
   const [showAddToList, setShowAddToList] = useState(false);
+  const [showActionsMenu, setShowActionsMenu] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const rating = (book.rating ?? 0).toFixed(1);
   const reviews = 120 + index * 9;
@@ -104,6 +112,91 @@ export default function BookCard({
           <ListPlus className="w-4 h-4 mr-1" />
           Add to List
         </Button>
+      ) : undefined,
+    actions:
+      isLoaded &&
+      user?.primaryEmailAddress?.emailAddress === "andililajal@gmail.com" ? (
+        <div className="relative">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowActionsMenu((s) => !s);
+            }}
+            aria-label="Actions"
+            className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800"
+          >
+            <svg
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="12" cy="5" r="1.5" />
+              <circle cx="12" cy="12" r="1.5" />
+              <circle cx="12" cy="19" r="1.5" />
+            </svg>
+          </button>
+          {showActionsMenu && (
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="absolute right-0 mt-2 w-40 bg-white dark:bg-neutral-900 rounded-lg shadow-lg z-50 border"
+            >
+              <button
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  setShowActionsMenu(false);
+                  setShowEditDialog(true);
+                }}
+                className="w-full text-left px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              >
+                Edit
+              </button>
+              <button
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  setShowActionsMenu(false);
+                  const ok = confirm(
+                    "Delete this book? This action cannot be undone."
+                  );
+                  if (!ok) return;
+                  setIsDeleting(true);
+                  try {
+                    const res = await fetch(`/api/books/${book.id}`, {
+                      method: "DELETE",
+                    });
+                    if (!res.ok) {
+                      const json = await res.json().catch(() => ({}));
+                      alert(json?.error || "Failed to delete book");
+                    } else {
+                      // refresh the page data
+                      router.refresh();
+                    }
+                  } catch (error) {
+                    console.error(error);
+                    alert("Failed to delete book");
+                  } finally {
+                    setIsDeleting(false);
+                  }
+                }}
+                className="w-full text-left px-4 py-2 text-red-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          )}
+          <EditBookDialog
+            open={showEditDialog}
+            onOpenChange={setShowEditDialog}
+            book={{
+              id: book.id,
+              title: book.title,
+              description: book.description,
+              longDescription: book.longDescription,
+              src: book.src,
+            }}
+          />
+        </div>
       ) : undefined,
     content: () => (
       <div className="space-y-4 ">

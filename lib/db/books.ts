@@ -10,13 +10,33 @@ import { normalizeDocument } from "./normalize";
  * @param limit - Number of books per page, defaults to 30
  * @returns Array of normalized Book objects
  */
+const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 export const getBooks = async (
   tag?: string,
   page: number = 1,
-  limit: number = 30
+  limit: number = 30,
+  q?: string
 ): Promise<Book[]> => {
   const db = await getDb();
-  const filter = tag ? { "tags.value": tag } : {};
+
+  const filters: Record<string, unknown>[] = [];
+  if (tag) filters.push({ "tags.value": tag });
+
+  if (q && q.trim()) {
+    const regex = new RegExp(escapeRegex(q.trim()), "i");
+    filters.push({
+      $or: [
+        { title: regex },
+        { description: regex },
+        { longDescription: regex },
+        { "authors.name": regex },
+        { "tags.value": regex },
+      ],
+    });
+  }
+
+  const filter = filters.length > 0 ? { $and: filters } : {};
   const skip = (page - 1) * limit;
 
   const docs = await db
@@ -52,9 +72,29 @@ export const getBookById = async (id: string): Promise<Book | null> => {
  * @param tag - Optional tag value to filter by
  * @returns Total count of matching books
  */
-export const getBookCount = async (tag?: string): Promise<number> => {
+export const getBookCount = async (
+  tag?: string,
+  q?: string
+): Promise<number> => {
   const db = await getDb();
-  const filter = tag ? { "tags.value": tag } : {};
+
+  const filters: Record<string, unknown>[] = [];
+  if (tag) filters.push({ "tags.value": tag });
+
+  if (q && q.trim()) {
+    const regex = new RegExp(escapeRegex(q.trim()), "i");
+    filters.push({
+      $or: [
+        { title: regex },
+        { description: regex },
+        { longDescription: regex },
+        { "authors.name": regex },
+        { "tags.value": regex },
+      ],
+    });
+  }
+
+  const filter = filters.length > 0 ? { $and: filters } : {};
   return db.collection("books").countDocuments(filter);
 };
 
