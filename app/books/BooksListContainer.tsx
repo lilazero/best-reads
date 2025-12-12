@@ -28,25 +28,19 @@ export default function BooksListContainer() {
   const searchQuery = currentSearchParams.get("q") || "";
 
   // Filter books based on search query (same logic as dropdown)
-  const filteredBooks = searchQuery.trim()
-    ? books.filter((book: (typeof books)[0]) => {
-        const query = searchQuery.toLowerCase();
-        return (
-          book.title.toLowerCase().includes(query) ||
-          (book.description &&
-            book.description.toLowerCase().includes(query)) ||
-          (book.longDescription &&
-            book.longDescription.toLowerCase().includes(query))
-        );
-      })
-    : books;
+  // Server-side search: books are returned already filtered when `q` is provided.
 
   const selectedTag = currentSearchParams.get("tag") || undefined;
   const pageParam = parseInt(currentSearchParams.get("page") || "1", 10);
 
   useEffect(() => {
     const loadData = async () => {
-      const result = await fetchBooksAndTags(selectedTag, pageParam);
+      const result = await fetchBooksAndTags(
+        selectedTag,
+        pageParam,
+        false,
+        searchQuery
+      );
       setBooks(result.books);
       setTags(result.tags);
       setTotalCount(result.totalCount);
@@ -56,12 +50,12 @@ export default function BooksListContainer() {
     };
 
     loadData();
-  }, [selectedTag, pageParam]);
+  }, [selectedTag, pageParam, searchQuery]);
 
   const handleRefreshCount = async () => {
     setIsRefreshing(true);
     const selectedTag = currentSearchParams.get("tag") || undefined;
-    const result = await refreshBookCount(selectedTag);
+    const result = await refreshBookCount(selectedTag, searchQuery);
 
     if (!result.error) {
       setTotalCount(result.count);
@@ -95,7 +89,6 @@ export default function BooksListContainer() {
         books={books}
         selectedTag={selectedTag}
         totalCount={totalCount}
-        filteredCount={searchQuery.trim() ? filteredBooks.length : undefined}
         startItem={startItem}
         endItem={endItem}
         isRefreshing={isRefreshing}
@@ -104,14 +97,22 @@ export default function BooksListContainer() {
         basePath="/books"
       />
 
-      {books.length === 0 ? (
-        <p className="text-gray-500 mt-8">No books found with this tag.</p>
-      ) : filteredBooks.length === 0 ? (
-        <p className="text-gray-500 mt-8">No books match your search.</p>
+      {totalCount === 0 ? (
+        <p className="text-gray-500 mt-8">
+          {searchQuery.trim() && selectedTag ? (
+            <>No books match your search in {selectedTag}.</>
+          ) : searchQuery.trim() ? (
+            <>No books match your search.</>
+          ) : selectedTag ? (
+            <>No books found with this tag.</>
+          ) : (
+            <>No books available.</>
+          )}
+        </p>
       ) : (
         <>
           <BookCardList
-            books={filteredBooks}
+            books={books}
             showBuyButton={false}
             columnCount={6}
             previewImageBackgroundTransparent={true}

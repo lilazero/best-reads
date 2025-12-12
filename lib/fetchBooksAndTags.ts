@@ -32,19 +32,22 @@ export interface FetchBooksAndTagsResult {
 export async function fetchBooksAndTags(
   selectedTag?: string,
   page: number = 1,
-  forceRefresh: boolean = false
+  forceRefresh: boolean = false,
+  q?: string
 ): Promise<FetchBooksAndTagsResult> {
   try {
-    const cacheKey = selectedTag || "all";
+    const cacheKey = `${selectedTag || "all"}::${q || ""}`;
 
     // Check cache for count (unless forceRefresh)
     let totalCount = forceRefresh ? null : getCount(cacheKey);
 
     // Fetch books, tags, and count (if not cached) in parallel
     const [books, tags, freshCount] = await Promise.all([
-      getBooks(selectedTag, page, BOOKS_PER_PAGE),
+      getBooks(selectedTag, page, BOOKS_PER_PAGE, q),
       getTags(),
-      totalCount === null ? getBookCount(selectedTag) : Promise.resolve(null),
+      totalCount === null
+        ? getBookCount(selectedTag, q)
+        : Promise.resolve(null),
     ]);
 
     // Use fresh count if fetched, otherwise use cached
@@ -87,13 +90,14 @@ export async function fetchBooksAndTags(
  * @returns The fresh count.
  */
 export async function refreshBookCount(
-  selectedTag?: string
+  selectedTag?: string,
+  q?: string
 ): Promise<{ count: number; error: string | null }> {
   try {
-    const cacheKey = selectedTag || "all";
+    const cacheKey = `${selectedTag || "all"}::${q || ""}`;
     invalidateCount(cacheKey);
 
-    const freshCount = await getBookCount(selectedTag);
+    const freshCount = await getBookCount(selectedTag, q);
     setCount(cacheKey, freshCount);
 
     return { count: freshCount, error: null };
