@@ -93,18 +93,20 @@ export default function BookCardList({
           />
         ))}
         {/* Render Add button after books for admin user */}
-        {isLoaded && user?.primaryEmailAddress?.emailAddress === "andililajal@gmail.com" && (
-          <div className="flex items-center justify-center p-4">
-            <button
-              onClick={() => setShowAddBook(true)}
-              className="w-full h-48 flex items-center justify-center rounded-lg border-2 border-dashed border-neutral-300 dark:border-neutral-700 text-4xl text-neutral-500 hover:bg-neutral-50"
-              aria-label="Add book"
-            >
-              +
-            </button>
-            <AddBookDialog open={showAddBook} onOpenChange={setShowAddBook} />
-          </div>
-        )}
+        {isLoaded &&
+          user?.primaryEmailAddress?.emailAddress ===
+            "andililajal@gmail.com" && (
+            <div className="flex items-center justify-center p-4">
+              <button
+                onClick={() => setShowAddBook(true)}
+                className="w-full h-48 flex items-center justify-center rounded-lg border-2 border-dashed border-neutral-300 dark:border-neutral-700 text-4xl text-neutral-500 hover:bg-neutral-50"
+                aria-label="Add book"
+              >
+                +
+              </button>
+              <AddBookDialog open={showAddBook} onOpenChange={setShowAddBook} />
+            </div>
+          )}
       </div>
     </div>
   );

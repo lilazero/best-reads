@@ -7,18 +7,32 @@ const ADMIN_EMAIL = "andililajal@gmail.com";
 export async function POST(req: Request) {
   const clerkUser = await currentUser();
   if (!clerkUser) {
-    return new Response(JSON.stringify({ error: "Not authenticated" }), { status: 401 });
+    return new Response(JSON.stringify({ error: "Not authenticated" }), {
+      status: 401,
+    });
   }
   const email = clerkUser.emailAddresses?.[0]?.emailAddress;
   if (email !== ADMIN_EMAIL) {
-    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403 });
+    return new Response(JSON.stringify({ error: "Forbidden" }), {
+      status: 403,
+    });
   }
 
   const body = await req.json().catch(() => ({}));
-  const { title, description, longDescription, src, publicationYear, rating, tags } = body;
+  const {
+    title,
+    description,
+    longDescription,
+    src,
+    publicationYear,
+    rating,
+    tags,
+  } = body;
 
   if (!title || typeof title !== "string") {
-    return new Response(JSON.stringify({ error: "Title is required" }), { status: 400 });
+    return new Response(JSON.stringify({ error: "Title is required" }), {
+      status: 400,
+    });
   }
 
   const doc: Record<string, unknown> = {
@@ -34,9 +48,13 @@ export async function POST(req: Request) {
 
   const db = await getDb();
   const result = await db.collection("books").insertOne(doc);
-  const inserted = await db.collection("books").findOne({ _id: result.insertedId });
+  const inserted = await db
+    .collection("books")
+    .findOne({ _id: result.insertedId });
   if (!inserted) {
-    return new Response(JSON.stringify({ error: "Failed to create book" }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Failed to create book" }), {
+      status: 500,
+    });
   }
 
   const book = normalizeDocument(inserted as Record<string, unknown>);
