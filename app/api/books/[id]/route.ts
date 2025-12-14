@@ -1,12 +1,17 @@
 import { currentUser } from "@clerk/nextjs/server";
+import { NextRequest } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/db/client";
 import { normalizeDocument } from "@/lib/db/normalize";
 
 const ADMIN_EMAIL = "andililajal@gmail.com";
 
-export async function PATCH(req: Request, context: { params: { id: string } }) {
-  const { id } = context.params ?? {};
+export async function PATCH(
+  req: NextRequest,
+  context: { params: { id: string } | Promise<{ id: string }> }
+) {
+  const params = await context.params;
+  const { id } = params ?? {};
 
   const clerkUser = await currentUser();
   if (!clerkUser) {
@@ -64,10 +69,11 @@ export async function PATCH(req: Request, context: { params: { id: string } }) {
 }
 
 export async function DELETE(
-  _req: Request,
-  context: { params: { id: string } }
+  _req: NextRequest,
+  context: { params: { id: string } | Promise<{ id: string }> }
 ) {
-  const { id } = context.params ?? {};
+  const params = await context.params;
+  const { id } = params ?? {};
 
   const clerkUser = await currentUser();
   if (!clerkUser) {
