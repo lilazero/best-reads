@@ -5,11 +5,8 @@ import { normalizeDocument } from "@/lib/db/normalize";
 
 const ADMIN_EMAIL = "andililajal@gmail.com";
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
+export async function PATCH(req: Request, context: { params: { id: string } }) {
+  const { id } = context.params ?? {};
 
   const clerkUser = await currentUser();
   if (!clerkUser) {
@@ -68,9 +65,9 @@ export async function PATCH(
 
 export async function DELETE(
   _req: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const { id } = params;
+  const { id } = context.params ?? {};
 
   const clerkUser = await currentUser();
   if (!clerkUser) {
